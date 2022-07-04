@@ -1,4 +1,5 @@
 # [Findings fire 2021](https://arxiv.org/pdf/2111.09811.pdf)
+
 ## Tamil top 3 (in order):
 - [CIA_NITT](http://ceur-ws.org/Vol-3159/T6-22.pdf) (F1: 0.71): The authors proposed a system that uses a pretrained XLM-RoBERTa for sequence classification. They tokenize the input text using the SentencePiece tokenizer, which is then fed as embeddings to be fine-tuned for the XLM-RoBERTa model
 - [ZYBank-AI](http://ceur-ws.org/Vol-3159/T6-5.pdf) (F1: 0.68): The authors based their experiments on the XLM-RoBERTa as well. To improve the results, they have added self-attention to the 12 hidden layers of the XLMRoBERTA. Furthermore, they propose a two-stage pipeline for the task at hand. In the first stage, the model is trained on data from Dravidian-CodeMix-FIRE 2020. In the second stage, the pre-trained model is fine-tuned on the Dravidian-CodeMix-FIRE 2021 and evaluated on test data.
@@ -17,3 +18,5 @@
 [Other papers](http://ceur-ws.org/Vol-3159/)
 
 [CIA_NITT could also be](http://ceur-ws.org/Vol-2826/T4-14.pdf)
+
+[Fire 2021 dataset analysis](https://dl.acm.org/doi/pdf/10.1145/3503162.3503177)
