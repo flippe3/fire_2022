@@ -87,9 +87,6 @@ def compute_loss(model, loader):
 
     return avg_loss 
 
-
-
-
 malm = l2l.algorithms.MAML(model, lr=0.1)
 opt = torch.optim.SGD(maml.parameters(), lr=0.001)
 
