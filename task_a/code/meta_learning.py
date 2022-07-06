@@ -59,7 +59,40 @@ train_meta = l2l.data.MetaDataset(train_dataset)
 valid_meta = l2l.data.MetaDataset(val_dataset)
 
 # This is the L2L code im working on
+
+def compute_loss(model, loader):
+    pbar = tqdm(enumerate(loader), total=len(loader), desc='idk')
+    for step, batch in pbar:
+        model.zero_grad()
+        b_input_ids = batch[0].to(device)
+        b_input_mask = batch[1].to(device)
+        b_labels = batch[2].to(device)
+
+
+        outputs = model(input_ids=b_input_ids, attention_mask=b_input_mask, labels=b_labels)
+        
+        total_loss += outputs.loss.item()
+
+        outputs.loss.backward()
+        
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        optimizer.step()
+        #scheduler.step()
+        
+        avg_loss = total_loss / len(train_dataloader)
+        
+        mem = torch.cuda.memory_reserved(device)/1E9 if torch.cuda.is_available() else 0
+        pbar.set_postfix(train_loss=f'{avg_loss:0.4f}',
+                        gpu_mem=f'{mem:0.2f} GB')           
+
+    return avg_loss 
+
+
+
+
+malm = l2l.algorithms.MAML(model, lr=0.1)
 opt = torch.optim.SGD(maml.parameters(), lr=0.001)
+
 for iteration in range(10):
     opt.zero_grad()
     task_model = maml.clone()  # torch.clone() for nn.Modules
