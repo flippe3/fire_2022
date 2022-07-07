@@ -113,7 +113,7 @@ class Tester:
                 pred_labels.extend(np.argmax(logits,axis=1))
 
         print(classification_report(pred_labels, true_labels))
-        f = open(output_file, 'a')
+        f = open("../outputs/"+output_file, 'a')
         f.write(f"\n {datetime.today().strftime('%Y-%m-%d %H:%M:%S')} \n")
         f.write(classification_report(pred_labels, true_labels))
         f.write('\n')
