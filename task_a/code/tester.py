@@ -35,8 +35,7 @@ class Tester:
     fire_2020_mal_val = "../data/fire_2020/malayalam_dev.tsv"
     fire_2020_mal_test = "../data/fire_2020/malayalam_test.tsv"
 
-    # TODO: A function that takes a model and returns a fire_2022 validation result
-    def get_dataset(self, model, tokenizer, train_file):
+    def get_dataset(self, tokenizer, train_file):
         labels, texts = read_dataset(train_file)
         inputs, masks =  tokenize_input(texts, tokenizer)
         labels = torch.tensor(labels, dtype=torch.long)
@@ -44,44 +43,44 @@ class Tester:
         dataset = TensorDataset(inputs, masks, labels)
         return dataset
 
-    def get_fire_2022_dataset(self, model, tokenizer):
-        tam_train = self.get_dataset(model, tokenizer, self.fire_2022_tam_train)
-        tam_val = self.get_dataset(model, tokenizer, self.fire_2022_tam_val)
+    def get_fire_2022_dataset(self, tokenizer):
+        tam_train = self.get_dataset(tokenizer, self.fire_2022_tam_train)
+        tam_val = self.get_dataset(tokenizer, self.fire_2022_tam_val)
 
-        kan_train = self.get_dataset(model, tokenizer, self.fire_2022_kan_train)
-        kan_val = self.get_dataset(model, tokenizer, self.fire_2022_kan_val)
+        kan_train = self.get_dataset(tokenizer, self.fire_2022_kan_train)
+        kan_val = self.get_dataset(tokenizer, self.fire_2022_kan_val)
 
-        mal_train = self.get_dataset(model, tokenizer, self.fire_2022_mal_train)
-        mal_val = self.get_dataset(model, tokenizer, self.fire_2022_mal_val)
+        mal_train = self.get_dataset(tokenizer, self.fire_2022_mal_train)
+        mal_val = self.get_dataset(tokenizer, self.fire_2022_mal_val)
 
         return tam_train, tam_val, kan_train, kan_val, mal_train, mal_val
          
-    def get_fire_2021_dataset(self, model, tokenizer):
-        tam_train = self.get_dataset(model, tokenizer, self.fire_2021_tam_train)
-        tam_val = self.get_dataset(model, tokenizer, self.fire_2021_tam_val)
+    def get_fire_2021_dataset(self, tokenizer):
+        tam_train = self.get_dataset(tokenizer, self.fire_2021_tam_train)
+        tam_val = self.get_dataset(tokenizer, self.fire_2021_tam_val)
 
-        mal_train = self.get_dataset(model, tokenizer, self.fire_2021_mal_train)
-        mal_val = self.get_dataset(model, tokenizer, self.fire_2021_mal_val)
+        mal_train = self.get_dataset(tokenizer, self.fire_2021_mal_train)
+        mal_val = self.get_dataset(tokenizer, self.fire_2021_mal_val)
 
         return tam_train, tam_val, mal_train, mal_val
     
-    def get_fire_2020_dataset(self, model, tokenizer):
-        tam_train = self.get_dataset(model, tokenizer, self.fire_2020_tam_train)
-        tam_val = self.get_dataset(model, tokenizer, self.fire_2020_tam_val)
+    def get_fire_2020_dataset(self, tokenizer):
+        tam_train = self.get_dataset(tokenizer, self.fire_2020_tam_train)
+        tam_val = self.get_dataset(tokenizer, self.fire_2020_tam_val)
 
-        mal_train = self.get_dataset(model, tokenizer, self.fire_2020_mal_train)
-        mal_val = self.get_dataset(model, tokenizer, self.fire_2020_mal_val)
+        mal_train = self.get_dataset(tokenizer, self.fire_2020_mal_train)
+        mal_val = self.get_dataset(tokenizer, self.fire_2020_mal_val)
 
         return tam_train, tam_val, mal_train, mal_val
 
 
     def fire_validation(self, model, tokenizer, device, output_file, year=2022, BS=16, dataset='tam'):
         if year == 2022:
-            _, tam_val, _, kan_val, _, mal_val = self.get_fire_2022_dataset(model, tokenizer)
+            _, tam_val, _, kan_val, _, mal_val = self.get_fire_2022_dataset(tokenizer)
         elif year == 2021:
-           _, tam_val, _, mal_val = self.get_fire_2021_dataset(model, tokenizer)
+           _, tam_val, _, mal_val = self.get_fire_2021_dataset(tokenizer)
         elif year == 2020:
-           _, tam_val, _, mal_val = self.get_fire_2020_dataset(model, tokenizer)
+           _, tam_val, _, mal_val = self.get_fire_2020_dataset(tokenizer)
 
 
         if dataset == 'tam':

@@ -6,6 +6,7 @@ import numpy as np
 from sklearn.metrics import classification_report
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, AdamW, get_linear_schedule_with_warmup, XLMRobertaTokenizer, XLMRobertaForSequenceClassification
 import os
+from tester import *
 
 training_file = "tam_sentiment"
 EPOCHS = 4
@@ -31,19 +32,8 @@ model = XLMRobertaForSequenceClassification.from_pretrained("xlm-roberta-base", 
 model.to(device)
 optimizer = AdamW(model.parameters(), lr = 2e-5)
 
-train_input_ids, train_attention_masks =  tokenize_input(tam_texts_train, tokenizer)
-val_input_ids, val_attention_masks =  tokenize_input(tam_texts_dev, tokenizer)
-
-train_input_ids = torch.cat(train_input_ids, dim=0)
-train_attention_masks = torch.cat(train_attention_masks, dim=0)
-train_labels = torch.tensor(tam_labels_train, dtype=torch.long)
-
-val_input_ids = torch.cat(val_input_ids, dim=0)
-val_attention_masks = torch.cat(val_attention_masks, dim=0)
-val_labels = torch.tensor(tam_labels_dev, dtype=torch.long)
-
-train_dataset = TensorDataset(train_input_ids, train_attention_masks, train_labels)
-val_dataset = TensorDataset(val_input_ids, val_attention_masks, val_labels)
+test = Tester()
+train_dataset, val_dataset = test.get_fire_2022_dataset(tokenizer)
 
 train_dataloader = DataLoader(
             train_dataset,
