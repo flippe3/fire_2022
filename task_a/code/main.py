@@ -6,9 +6,8 @@ import numpy as np
 from sklearn.metrics import classification_report
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, AdamW, get_linear_schedule_with_warmup, XLMRobertaTokenizer, XLMRobertaForSequenceClassification
 import os
-from tester import *
+from dataset import *
 
-training_file = "tam_sentiment"
 EPOCHS = 4
 BATCH_SIZE = 16
 os.environ["CUDA_VISIBLE_DEVICES"]="4"
@@ -23,17 +22,13 @@ else:
     device = torch.device("cpu")
 
 
-print(f"Training file:{training_file}")
-tam_labels_train, tam_texts_train = read_dataset(training_file+"_train.tsv")
-tam_labels_dev, tam_texts_dev = read_dataset(training_file+"_dev.tsv")
-
 tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-base')
 model = XLMRobertaForSequenceClassification.from_pretrained("xlm-roberta-base", num_labels=5, output_attentions=True)
 model.to(device)
 optimizer = AdamW(model.parameters(), lr = 2e-5)
 
-test = Dataset()
-train_dataset, val_dataset = test.get_fire_2022_dataset(tokenizer)
+data = Dataset()
+train_dataset, val_dataset, _, _, _, _ = data.get_fire_2022_dataset(tokenizer)
 
 train_dataloader = DataLoader(
             train_dataset,
@@ -83,34 +78,9 @@ def train():
                             gpu_mem=f'{mem:0.2f} GB')           
 
         print("Average training loss: {0:.2f}".format(avg_train_loss))
+        
         print("Running Validation...")
 
-        vbar = tqdm(enumerate(validation_dataloader), total=len(validation_dataloader), desc='valid')
+        data.fire_validation(model, tokenizer, device, output_file="output_test", year=2022, BS=16, dataset='tam')
 
-
-        model.eval()
-        total_eval_loss = 0
-        true_labels = []
-        pred_labels = []
-        for step, batch in vbar:
-            b_input_ids = batch[0].to(device)
-            b_input_mask = batch[1].to(device)
-            b_labels = batch[2].to(device)
-            with torch.no_grad(): 
-                outputs = model(input_ids=b_input_ids, 
-                                                attention_mask=b_input_mask,
-                                                labels=b_labels)
-                total_eval_loss += outputs.loss.item()
-                logits = outputs.logits.detach().cpu().numpy().tolist()
-                label_ids = b_labels.to('cpu').numpy().tolist()
-
-                true_labels.extend(label_ids)
-                pred_labels.extend(np.argmax(logits,axis=1))
-        f = open("output_file1.txt", "a"
-        )    
-        print(classification_report(pred_labels, true_labels))
-        f.write("\n")
-        f.write(classification_report(pred_labels, true_labels))
-        f.write("\n")
-        f.close()
 train()
