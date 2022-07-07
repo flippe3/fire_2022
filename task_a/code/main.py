@@ -32,7 +32,7 @@ model = XLMRobertaForSequenceClassification.from_pretrained("xlm-roberta-base", 
 model.to(device)
 optimizer = AdamW(model.parameters(), lr = 2e-5)
 
-test = Tester()
+test = Dataset()
 train_dataset, val_dataset = test.get_fire_2022_dataset(tokenizer)
 
 train_dataloader = DataLoader(

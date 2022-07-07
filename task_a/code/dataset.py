@@ -8,7 +8,7 @@ from tqdm import tqdm
 import numpy as np
 from datetime import datetime
 
-class Tester:
+class Dataset:
     # Fire 2022
     fire_2022_tam_train = "../data/tam_sentiment_train.tsv"
     fire_2022_tam_val = "../data/tam_sentiment_dev.tsv"
