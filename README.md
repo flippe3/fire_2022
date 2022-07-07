@@ -8,6 +8,7 @@ Official repo for team EISLAB in [Sentiment Analysis and Homophobia detection  o
 - Try other models form [SBERT](https://www.sbert.net/docs/pretrained_models.html)
 - Implement K-fold
 - Try zero-shot [meta learning](http://learn2learn.net/) 
+- Compare fire2021 and fire2022
 - Run [lang_detect](https://pypi.org/project/langdetect/) and store outputs
 
 ## Questions 

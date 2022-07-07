@@ -26,7 +26,6 @@ print(f"Training file:{training_file}")
 tam_labels_train, tam_texts_train = read_dataset(training_file+"_train.tsv")
 tam_labels_dev, tam_texts_dev = read_dataset(training_file+"_dev.tsv")
 
-
 tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-base')
 model = XLMRobertaForSequenceClassification.from_pretrained("xlm-roberta-base", num_labels=5, output_attentions=True)
 model.to(device)
