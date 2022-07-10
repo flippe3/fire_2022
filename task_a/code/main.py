@@ -81,6 +81,6 @@ def train():
         
         print("Running Validation...")
 
-        data.fire_validation(model, tokenizer, device, output_file="output_test", year=2022, BS=16, dataset='tam')
+        data.fire_validation(model, tokenizer, device, output_file="xlm-roberta", year=2022, BS=16, dataset='tam')
 
 train()

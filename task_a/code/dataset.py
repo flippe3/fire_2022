@@ -2,7 +2,6 @@ from lib2to3.pgen2 import token
 from sklearn.metrics import classification_report
 import torch
 import pandas as pd
-from util import *
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler, SequentialSampler
 from tqdm import tqdm
 import numpy as np
@@ -36,10 +35,9 @@ class Dataset:
     fire_2020_mal_test = "../data/fire_2020/malayalam_test.tsv"
 
     def get_dataset(self, tokenizer, train_file):
-        labels, texts = read_dataset(train_file)
-        inputs, masks =  tokenize_input(texts, tokenizer)
+        labels, texts = self.read_dataset(train_file)
+        inputs, masks =  self.tokenize_input(texts, tokenizer)
         labels = torch.tensor(labels, dtype=torch.long)
-
         dataset = TensorDataset(inputs, masks, labels)
         return dataset
 
@@ -90,12 +88,13 @@ class Dataset:
         elif dataset == 'mal':
             loader = DataLoader(mal_val, sampler = SequentialSampler(tam_val), batch_size=BS) 
 
-        print(f"{dataset} validation: {loader * BS}")
+        print(f"{dataset} validation: {len(loader) * BS}")
         
         vbar = tqdm(enumerate(loader), total=len(loader), desc= dataset + " validation")
         model.eval()
         true_labels = []
         pred_labels = []
+        #total_eval_loss = 0
         for step, batch in vbar:
             b_input_ids = batch[0].to(device)
             b_input_mask = batch[1].to(device)
@@ -104,7 +103,7 @@ class Dataset:
                 outputs = model(input_ids=b_input_ids, 
                                                 attention_mask=b_input_mask,
                                                 labels=b_labels)
-                total_eval_loss += outputs.loss.item()
+                #total_eval_loss += outputs.loss.item()
                 logits = outputs.logits.detach().cpu().numpy().tolist()
                 label_ids = b_labels.to('cpu').numpy().tolist()
 
@@ -119,18 +118,18 @@ class Dataset:
         f.close()
         model.train()
 
-    def read_dataset(path):
-        df = pd.read_csv('../data/' + path, '\t')
+    def read_dataset(self, path):
+        df = pd.read_csv(path, '\t')
         texts = df.text.values
         label_cats = df.category.astype('category').cat
         label_names = label_cats.categories
         labels = label_cats.codes
 
-        print("Texts:", len(texts))
-        print("Label names:", label_names)
+        #print("Texts:", len(texts))
+        #print("Label names:", label_names)
         return labels, texts
 
-    def tokenize_input(texts, tokenizer):
+    def tokenize_input(self, texts, tokenizer):        
         input_ids = []
         attention_masks = []
 
@@ -149,5 +148,4 @@ class Dataset:
         
         input_ids = torch.cat(input_ids, dim=0)
         attention_masks = torch.cat(attention_masks, dim=0)
-
-        return input_ids, attention_masks    
+        return input_ids, attention_masks 
