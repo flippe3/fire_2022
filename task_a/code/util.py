@@ -1,31 +1,16 @@
-import pandas as pd
+def create_output(model, tokenizer, train_data, val_data, learning_rate, epochs, batch_size, output_file):
+    f = open("../outputs/" + output_file, 'a')
+    f.write("## Info\n")
+    f.write(f"This was trained on ")
+    for i in train_data:
+        f.write(f"[{i}](https://github.com/flippe3/fire_2022/tree/master/task_a/data/{i})")
 
-def read_dataset(path):
-    df = pd.read_csv('../data/' + path, '\t')
-    texts = df.text.values
-    label_cats = df.category.astype('category').cat
-    label_names = label_cats.categories
-    labels = label_cats.codes
+    f.write(f" and validated on [{val_data}](https://github.com/flippe3/fire_2022/tree/master/task_a/data/{val_data})\n\n")
 
-    print("Texts:", len(texts))
-    print("Label names:", label_names)
-    return labels, texts
-
-def tokenize_input(texts, tokenizer):
-    input_ids = []
-    attention_masks = []
-
-    for text in texts:
-        encoded_dict = tokenizer.encode_plus(
-                            text,            
-                            add_special_tokens = True,
-                            max_length = 512,
-                            padding = 'max_length',
-                            return_attention_mask = True,
-                            truncation=True,
-                            return_tensors = 'pt')
+    f.write(f"Model: [{model}](https://huggingface.co/{model})\n\n Tokenizer: [{tokenizer}](https://huggingface.co/{tokenizer})\n\n")
     
-        input_ids.append(encoded_dict['input_ids'])
-        attention_masks.append(encoded_dict['attention_mask'])
-
-    return input_ids, attention_masks
+    f.write("Hyperparameters:\n")
+    f.write(f"- Learning Rate: {learning_rate}\n")
+    f.write(f"- Epochs: {epochs}\n")
+    f.write(f"- Batch Size: {batch_size}\n")
+    f.close()

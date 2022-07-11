@@ -1,12 +1,18 @@
 import torch
 from tqdm import tqdm
-from util import read_dataset, tokenize_input
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler, SequentialSampler
 import numpy as np
 from sklearn.metrics import classification_report
-from transformers import AutoModelForSequenceClassification, AutoTokenizer, AdamW, get_linear_schedule_with_warmup, XLMRobertaTokenizer, XLMRobertaForSequenceClassification
+from transformers import TOKENIZER_MAPPING, AutoModelForSequenceClassification, AutoTokenizer, AdamW, get_linear_schedule_with_warmup, XLMRobertaTokenizer, XLMRobertaForSequenceClassification
 import os
 from dataset import *
+from util import create_output
+
+TOKENIZER_NAME = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
+MODEL_NAME = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
+LEARNING_RATE = 3e-5
+
+OUTPUT_FILE = "paraphrase-roberta.md"
 
 EPOCHS = 4
 BATCH_SIZE = 16
@@ -20,24 +26,27 @@ if torch.cuda.is_available():
 else:
     print('NO GPU AVAILABLE ERROR')
     device = torch.device("cpu")
+   
 
-
-tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-xlm-r-multilingual-v1')
-model = AutoModelForSequenceClassification.from_pretrained("sentence-transformers/paraphrase-xlm-r-multilingual-v1", num_labels=5, output_attentions=True)
+tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_NAME)
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=5, output_attentions=True)
 model.to(device)
-optimizer = AdamW(model.parameters(), lr = 2e-5)
+optimizer = AdamW(model.parameters(), lr = LEARNING_RATE)
 
 data = Dataset()
-train_dataset, val_dataset, _, _, _, _ = data.get_fire_2022_dataset(tokenizer)
+tam_train_2022, tam_val_2022, _, _, _, _ = data.get_fire_2022_dataset(tokenizer)
+tam_train_2021, _, _, _ = data.get_fire_2021_dataset(tokenizer)
+
+create_output(MODEL_NAME, TOKENIZER_NAME, [data.fire_2022_tam_train, data.fire_2021_tam_train], data.fire_2022_tam_val, LEARNING_RATE, EPOCHS, BATCH_SIZE, OUTPUT_FILE)
 
 train_dataloader = DataLoader(
-            train_dataset,
-            sampler = RandomSampler(train_dataset),
+            tam_train_2022 + tam_train_2021,
+            sampler = RandomSampler(tam_train_2022 + tam_train_2021),
             batch_size = BATCH_SIZE)
 
 validation_dataloader = DataLoader(
-            val_dataset,
-            sampler = SequentialSampler(val_dataset),
+            tam_val_2022,
+            sampler = SequentialSampler(tam_val_2022),
             batch_size = BATCH_SIZE)
 
 total_steps = len(train_dataloader) * EPOCHS
@@ -81,6 +90,6 @@ def train():
         
         print("Running Validation...")
 
-        data.fire_validation(model, tokenizer, device, output_file="xlm-roberta", year=2022, BS=16, dataset='tam')
+        data.fire_validation(model, tokenizer, device, output_file=OUTPUT_FILE, year=2022, BS=16, dataset='tam')
 
 train()

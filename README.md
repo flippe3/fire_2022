@@ -10,6 +10,7 @@ Official repo for team EISLAB in [Sentiment Analysis and Homophobia detection  o
 - Try zero-shot [meta learning](http://learn2learn.net/) 
 - Compare fire2021 and fire2022
 - Run [lang_detect](https://pypi.org/project/langdetect/) and store outputs
+- Look at [imbalanced learn](https://imbalanced-learn.org/stable/)
 
 ## Questions 
 - Can different language can be leveraged?

@@ -34,11 +34,17 @@ class Dataset:
     fire_2020_mal_val = "../data/fire_2020/malayalam_dev.tsv"
     fire_2020_mal_test = "../data/fire_2020/malayalam_test.tsv"
 
-    def get_dataset(self, tokenizer, train_file):
-        labels, texts = self.read_dataset(train_file)
-        inputs, masks =  self.tokenize_input(texts, tokenizer)
-        labels = torch.tensor(labels, dtype=torch.long)
-        dataset = TensorDataset(inputs, masks, labels)
+    def get_dataset(self, tokenizer, train_file, test=False):
+        if test == False:
+            labels, texts = self.read_dataset(train_file, test)
+            inputs, masks =  self.tokenize_input(texts, tokenizer)
+            labels = torch.tensor(labels, dtype=torch.long)
+            dataset = TensorDataset(inputs, masks, labels)
+        else:
+            texts = self.read_dataset(train_file, test)
+            inputs, masks =  self.tokenize_input(texts, tokenizer)
+            dataset = TensorDataset(inputs, masks)
+            
         return dataset
 
     def get_fire_2022_dataset(self, tokenizer):
@@ -55,12 +61,12 @@ class Dataset:
          
     def get_fire_2021_dataset(self, tokenizer):
         tam_train = self.get_dataset(tokenizer, self.fire_2021_tam_train)
-        tam_val = self.get_dataset(tokenizer, self.fire_2021_tam_val)
+        tam_test = self.get_dataset(tokenizer, self.fire_2021_tam_val, test=True)
 
         mal_train = self.get_dataset(tokenizer, self.fire_2021_mal_train)
-        mal_val = self.get_dataset(tokenizer, self.fire_2021_mal_val)
+        mal_test = self.get_dataset(tokenizer, self.fire_2021_mal_val, test=True)
 
-        return tam_train, tam_val, mal_train, mal_val
+        return tam_train, tam_test, mal_train, mal_test
     
     def get_fire_2020_dataset(self, tokenizer):
         tam_train = self.get_dataset(tokenizer, self.fire_2020_tam_train)
@@ -113,21 +119,26 @@ class Dataset:
         print(classification_report(pred_labels, true_labels))
         f = open("../outputs/"+output_file, 'a')
         f.write(f"\n {datetime.today().strftime('%Y-%m-%d %H:%M:%S')} \n")
+        f.write("```\n")
         f.write(classification_report(pred_labels, true_labels))
-        f.write('\n')
+        f.write("```\n")
         f.close()
         model.train()
 
-    def read_dataset(self, path):
+
+    def read_dataset(self, path, test=False):
         df = pd.read_csv(path, '\t')
         texts = df.text.values
-        label_cats = df.category.astype('category').cat
-        label_names = label_cats.categories
-        labels = label_cats.codes
+        if test == False:
+            label_cats = df.category.astype('category').cat
+            label_names = label_cats.categories
+            labels = label_cats.codes
 
-        #print("Texts:", len(texts))
-        #print("Label names:", label_names)
-        return labels, texts
+            #print("Texts:", len(texts))
+            #print("Label names:", label_names)
+            return labels, texts
+        else:
+            return texts
 
     def tokenize_input(self, texts, tokenizer):        
         input_ids = []
