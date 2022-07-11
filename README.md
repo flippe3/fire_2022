@@ -12,6 +12,11 @@ Official repo for team EISLAB in [Sentiment Analysis and Homophobia detection  o
 - Run [lang_detect](https://pypi.org/project/langdetect/) and store outputs
 - Look at [imbalanced learn](https://imbalanced-learn.org/stable/)
 
+## [Duplicate Findings (shown in dataset_duplicates)](https://github.com/flippe3/fire_2022/blob/master/task_a/code/dataset_duplicates.ipynb)
+- There are duplicate examples in tamil training.
+- There are duplicate examples in tamil validation.
+- The entire fire 2022 validation set is part of fire2021 training data.
+
 ## Questions 
 - Can different language can be leveraged?
     - Translations?

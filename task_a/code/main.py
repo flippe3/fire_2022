@@ -15,7 +15,7 @@ LEARNING_RATE = 3e-5
 OUTPUT_FILE = "paraphrase-roberta.md"
 
 EPOCHS = 4
-BATCH_SIZE = 16
+BATCH_SIZE = 24
 os.environ["CUDA_VISIBLE_DEVICES"]="4"
 
 if torch.cuda.is_available():    
