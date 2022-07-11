@@ -1,23 +1,12 @@
 # Fire 2022
-
 Official repo for team EISLAB in [Sentiment Analysis and Homophobia detection  of YouTube comments in Code-Mixed Dravidian Languages
 ](https://sites.google.com/view/dravidiancodemix-2022/home?authuser=0)
 
-## Ideas
-- ~~Write simple pipeline to test model on validation, fire2020, fire2021~~
-- Try other models form [SBERT](https://www.sbert.net/docs/pretrained_models.html)
-- Implement K-fold
-- Try zero-shot [meta learning](http://learn2learn.net/) 
-- Compare fire2021 and fire2022
-- Run [lang_detect](https://pypi.org/project/langdetect/) and store outputs
-- Look at [imbalanced learn](https://imbalanced-learn.org/stable/)
+## [Task A Findings](https://github.com/flippe3/fire_2022/blob/master/task_a/study.md)
 
-## [Duplicate Findings (shown in dataset_duplicates)](https://github.com/flippe3/fire_2022/blob/master/task_a/code/dataset_duplicates.ipynb)
-- There are duplicate examples in tamil training.
-- There are duplicate examples in tamil validation.
-- The entire fire 2022 validation set is part of fire2021 training data.
+## [Task B Findings](https://github.com/flippe3/fire_2022/blob/master/task_b/pre-study.md)
 
-## Questions 
+## General Questions
 - Can different language can be leveraged?
     - Translations?
 - Leverage commonality between the tasks?
@@ -27,17 +16,3 @@ Official repo for team EISLAB in [Sentiment Analysis and Homophobia detection  o
     - Meta-learning
 - Can any meaningful pre-training be done?
 - What pre-processing should be done?
-
-## Models to run
-- [Pharaphrase XLM-Roberta](https://huggingface.co/sentence-transformers/paraphrase-xlm-r-multilingual-v1)
-- [XLM-Roberta](https://huggingface.co/xlm-roberta-large)
-- [Multilanguage BERT](bert-base-multilingual-cased)
-- [BERT](https://huggingface.co/bert-base-uncased)
-
-## Tested
-- [XLM-roberta-base](https://huggingface.co/xlm-roberta-base)
-## Validation Results (Fire 2022)
-- [XLM-roberta-base](https://github.com/flippe3/fire_2022/blob/master/task_a/outputs/xlm-roberta-base-tamil)
-## Fire 2021 Results
-
-## Fire 2020 Results
