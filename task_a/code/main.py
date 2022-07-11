@@ -22,8 +22,8 @@ else:
     device = torch.device("cpu")
 
 
-tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-base')
-model = XLMRobertaForSequenceClassification.from_pretrained("xlm-roberta-base", num_labels=5, output_attentions=True)
+tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-xlm-r-multilingual-v1')
+model = AutoModelForSequenceClassification.from_pretrained("sentence-transformers/paraphrase-xlm-r-multilingual-v1", num_labels=5, output_attentions=True)
 model.to(device)
 optimizer = AdamW(model.parameters(), lr = 2e-5)
 

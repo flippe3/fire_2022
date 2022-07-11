@@ -29,9 +29,9 @@ Official repo for team EISLAB in [Sentiment Analysis and Homophobia detection  o
 - [BERT](https://huggingface.co/bert-base-uncased)
 
 ## Tested
-
+- [XLM-roberta-base](https://huggingface.co/xlm-roberta-base)
 ## Validation Results (Fire 2022)
-
+- [XLM-roberta-base](https://github.com/flippe3/fire_2022/blob/master/task_a/outputs/xlm-roberta-base-tamil)
 ## Fire 2021 Results
 
 ## Fire 2020 Results
