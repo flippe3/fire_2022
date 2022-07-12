@@ -6,10 +6,10 @@
 - Implement K-fold
 - Try zero-shot [meta learning](http://learn2learn.net/) 
 - ~~Compare fire2021 and fire2022~~
-- Run [lang_detect](https://pypi.org/project/langdetect/) and store outputs
+- Run [lang_detect](https://pypi.org/project/langdetect/) and store outputs, or try NLLB-200 LID Model
 - Look at [imbalanced learn](https://imbalanced-learn.org/stable/)
 - Look at tokenizer token counts
-- Try [BLOOM](https://huggingface.co/bigscience/bloom)
+- ~~Try [BLOOM](https://huggingface.co/bigscience/bloom)~~ bloom requires atleast 8*A100s.
 - Try [NLLB-200](https://github.com/facebookresearch/fairseq/tree/nllb)
 
 ## [Duplicate Findings (shown in dataset_duplicates.ipynb)](https://github.com/flippe3/fire_2022/blob/master/task_a/code/dataset_duplicates.ipynb)
