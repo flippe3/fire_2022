@@ -12,11 +12,11 @@ TOKENIZER_NAME = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 MODEL_NAME = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 LEARNING_RATE = 3e-5
 
-OUTPUT_FILE = "paraphrase-roberta.md"
+OUTPUT_FILE = "paraphrase-roberta-tamil.md"
 
 EPOCHS = 4
 BATCH_SIZE = 24
-os.environ["CUDA_VISIBLE_DEVICES"]="4"
+os.environ["CUDA_VISIBLE_DEVICES"]="5"
 
 if torch.cuda.is_available():    
     device = torch.device("cuda")
@@ -35,13 +35,13 @@ optimizer = AdamW(model.parameters(), lr = LEARNING_RATE)
 
 data = Dataset()
 tam_train_2022, tam_val_2022, _, _, _, _ = data.get_fire_2022_dataset(tokenizer)
-tam_train_2021, _, _, _ = data.get_fire_2021_dataset(tokenizer)
+#tam_train_2020, _, _, _ = data.get_fire_2020_dataset(tokenizer)
 
-create_output(MODEL_NAME, TOKENIZER_NAME, [data.fire_2022_tam_train, data.fire_2021_tam_train], data.fire_2022_tam_val, LEARNING_RATE, EPOCHS, BATCH_SIZE, OUTPUT_FILE)
+create_output(MODEL_NAME, TOKENIZER_NAME, [data.fire_2022_tam_train], data.fire_2022_tam_val, LEARNING_RATE, EPOCHS, BATCH_SIZE, OUTPUT_FILE)
 
 train_dataloader = DataLoader(
-            tam_train_2022 + tam_train_2021,
-            sampler = RandomSampler(tam_train_2022 + tam_train_2021),
+            tam_train_2022,
+            sampler = RandomSampler(tam_train_2022),
             batch_size = BATCH_SIZE)
 
 validation_dataloader = DataLoader(
