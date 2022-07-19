@@ -1,4 +1,3 @@
-from lib2to3.pgen2 import token
 from sklearn.metrics import classification_report
 import torch
 import pandas as pd
@@ -13,31 +12,22 @@ import numpy as np
 from datetime import datetime
 
 class Dataset:
-    # Fire 2022
-    fire_2022_tam_train = "../data/tam_sentiment_train.tsv"
-    fire_2022_tam_val = "../data/tam_sentiment_dev.tsv"
-     
-    fire_2022_kan_train = "../data/kan_sentiment_train.tsv"
-    fire_2022_kan_val = "../data/kan_sentiment_dev.tsv"
-     
-    fire_2022_mal_train = "../data/Mal_sentiment_train.tsv"
-    fire_2022_mal_val = "../data/Mal_sentiment_dev.tsv"
+    # English
+    eng_train = "../data/eng_3_train.tsv"
+    eng_val = "../data/eng_3_dev.tsv"
     
-    # Fire 2021 TODO: check if this is test set or dev
-    fire_2021_tam_train = "../data/fire_2021/tamil_train.tsv"
-    fire_2021_tam_val = "../data/fire_2021/tamil_test.tsv"
+    # Tamil
+    tam_train = "../data/tam_3_train.tsv"
+    tam_val = "../data/tam_3_dev.tsv"
+     
+    # Malayalam
+    mal_train = "../data/mal_3_train.csv"
+    mal_val = "../data/mal_3_dev.csv"
 
-    fire_2021_mal_train = "../data/fire_2021/malayalam_train.tsv"
-    fire_2021_mal_val = "../data/fire_2021/malayalam_test.tsv"
-
-    # Fire 2020         
-    fire_2020_tam_train = "../data/fire_2020/tamil_train.tsv"
-    fire_2020_tam_val = "../data/fire_2020/tamil_dev.tsv"
-    fire_2020_tam_test = "../data/fire_2020/tamil_test.tsv"
-
-    fire_2020_mal_train = "../data/fire_2020/malayalam_train.tsv"
-    fire_2020_mal_val = "../data/fire_2020/malayalam_dev.tsv"
-    fire_2020_mal_test = "../data/fire_2020/malayalam_test.tsv"
+    # English-Tamil
+    eng_tam_train = "../data/eng-tam_3_train.tsv"
+    eng_tam_val = "../data/eng-tam_3_dev.tsv"
+     
 
     def get_dataset(self, tokenizer, train_file, test=False, balance=False):
         if test == False:
@@ -61,52 +51,32 @@ class Dataset:
             
         return dataset
 
-    def get_fire_2022_dataset(self, tokenizer, balance=False):
-        tam_train = self.get_dataset(tokenizer, self.fire_2022_tam_train, balance=balance)
-        tam_val = self.get_dataset(tokenizer, self.fire_2022_tam_val, balance=balance)
+    def get_phobia_dataset(self, tokenizer, balance=False):
+        eng_train = self.get_dataset(tokenizer, self.eng_train, balance=balance)
+        eng_val = self.get_dataset(tokenizer, self.eng_val, balance=balance)
+        
+        tam_train = self.get_dataset(tokenizer, self.tam_train, balance=balance)
+        tam_val = self.get_dataset(tokenizer, self.tam_val, balance=balance)
 
-        kan_train = self.get_dataset(tokenizer, self.fire_2022_kan_train, balance=balance)
-        kan_val = self.get_dataset(tokenizer, self.fire_2022_kan_val, balance=balance)
+        mal_train = self.get_dataset(tokenizer, self.mal_train, balance=balance)
+        mal_val = self.get_dataset(tokenizer, self.mal_val, balance=balance)
 
-        mal_train = self.get_dataset(tokenizer, self.fire_2022_mal_train, balance=balance)
-        mal_val = self.get_dataset(tokenizer, self.fire_2022_mal_val, balance=balance)
+        eng_tam_train = self.get_dataset(tokenizer, self.eng_tam_train, balance=balance)
+        eng_tam_val = self.get_dataset(tokenizer, self.eng_tam_val, balance=balance)
 
-        return tam_train, tam_val, kan_train, kan_val, mal_train, mal_val
-         
-    def get_fire_2021_dataset(self, tokenizer):
-        tam_train = self.get_dataset(tokenizer, self.fire_2021_tam_train)
-        tam_test = self.get_dataset(tokenizer, self.fire_2021_tam_val, test=True)
+        return eng_train, eng_val, tam_train, tam_val, mal_train, mal_val, eng_tam_train, eng_tam_val
 
-        mal_train = self.get_dataset(tokenizer, self.fire_2021_mal_train)
-        mal_test = self.get_dataset(tokenizer, self.fire_2021_mal_val, test=True)
-
-        return tam_train, tam_test, mal_train, mal_test
-    
-    def get_fire_2020_dataset(self, tokenizer):
-        tam_train = self.get_dataset(tokenizer, self.fire_2020_tam_train)
-        tam_val = self.get_dataset(tokenizer, self.fire_2020_tam_val)
-
-        mal_train = self.get_dataset(tokenizer, self.fire_2020_mal_train)
-        mal_val = self.get_dataset(tokenizer, self.fire_2020_mal_val)
-
-        return tam_train, tam_val, mal_train, mal_val
-
-
-    def fire_validation(self, model, tokenizer, device, output_file, dataset, year=2022, BS=16):
-        if year == 2022:
-            _, tam_val, _, kan_val, _, mal_val = self.get_fire_2022_dataset(tokenizer, balance=False)
-        elif year == 2021:
-           _, tam_val, _, mal_val = self.get_fire_2021_dataset(tokenizer, balance=False)
-        elif year == 2020:
-           _, tam_val, _, mal_val = self.get_fire_2020_dataset(tokenizer, balance=False)
-
+    def validation(self, model, tokenizer, device, output_file, dataset, BS=16):
+        _, eng_val, _, tam_val, _, mal_val, _, eng_tam_val = self.get_fire_2020_dataset(tokenizer, balance=False)
 
         if dataset == 'tam':
             loader = DataLoader(tam_val, sampler = SequentialSampler(tam_val), batch_size=BS)
-        elif dataset == 'kan' and year == 2022:
-            loader = DataLoader(kan_val, sampler = SequentialSampler(kan_val), batch_size=BS) 
+        elif dataset == 'eng':
+            loader = DataLoader(eng_val, sampler = SequentialSampler(eng_val), batch_size=BS) 
         elif dataset == 'mal':
             loader = DataLoader(mal_val, sampler = SequentialSampler(mal_val), batch_size=BS) 
+        elif dataset == 'eng_tam':
+            loader = DataLoader(eng_tam_val, sampler = SequentialSampler(eng_tam_val), batch_size=BS) 
 
         print(f"{dataset} validation: {len(loader) * BS}")
         

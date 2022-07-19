@@ -16,3 +16,4 @@ Official repo for team EISLAB in [Sentiment Analysis and Homophobia detection  o
     - Meta-learning
 - Can any meaningful pre-training be done?
 - What pre-processing should be done?
+- Can [NLLB-200](https://huggingface.co/facebook/nllb-200-distilled-600M) be used?

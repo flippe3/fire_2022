@@ -6,13 +6,12 @@ from sklearn.metrics import classification_report
 from transformers import TOKENIZER_MAPPING, AutoModelForSequenceClassification, AutoTokenizer, AdamW, get_linear_schedule_with_warmup, XLMRobertaTokenizer, XLMRobertaForSequenceClassification
 import os
 from dataset import Dataset
-from util import create_output
 
 TOKENIZER_NAME = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 MODEL_NAME = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 LEARNING_RATE = 3e-5
 
-OUTPUT_FILE = "paraphrase-roberta-malayalam-no-balance-run2.md"
+OUTPUT_FILE = "paraphrase-roberta-english-no-balance.md"
 
 EPOCHS = 4
 BATCH_SIZE = 16
@@ -34,18 +33,13 @@ model.to(device)
 optimizer = AdamW(model.parameters(), lr = LEARNING_RATE, no_deprecation_warning=True)
 
 data = Dataset()
-_, _, _, _, mal_train_2022, mal_val_2022 = data.get_fire_2022_dataset(tokenizer, balance=False)
+eng_train_2022, _, _, _, _, _, _, _ = data.get_phobia_dataset(tokenizer, balance=False)
 
-create_output(MODEL_NAME, TOKENIZER_NAME, [data.fire_2022_mal_train], data.fire_2022_mal_val, LEARNING_RATE, EPOCHS, BATCH_SIZE, OUTPUT_FILE)
+#create_output(MODEL_NAME, TOKENIZER_NAME, [data.fire_2022_mal_train], data.fire_2022_mal_val, LEARNING_RATE, EPOCHS, BATCH_SIZE, OUTPUT_FILE)
 
 train_dataloader = DataLoader(
-            mal_train_2022,
-            sampler = RandomSampler(mal_train_2022),
-            batch_size = BATCH_SIZE)
-
-validation_dataloader = DataLoader(
-            mal_val_2022,
-            sampler = SequentialSampler(mal_val_2022),
+            eng_train_2022,
+            sampler = RandomSampler(eng_train_2022),
             batch_size = BATCH_SIZE)
 
 total_steps = len(train_dataloader) * EPOCHS
@@ -88,6 +82,6 @@ def train():
         
         print("Running Validation...")
 
-        data.fire_validation(model, tokenizer, device, output_file=OUTPUT_FILE, year=2022, BS=BATCH_SIZE, dataset='mal')
+        data.validation(model, tokenizer, device, output_file=OUTPUT_FILE, BS=BATCH_SIZE, dataset='eng')
 
 train()
