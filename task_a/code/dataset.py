@@ -11,6 +11,9 @@ from imblearn.over_sampling import RandomOverSampler
 import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
+from tokenizers import normalizers
+from tokenizers.normalizers import NFD
+
 
 class Dataset:
     # Fire 2022
@@ -155,8 +158,10 @@ class Dataset:
     def tokenize_input(self, texts, tokenizer):        
         input_ids = []
         attention_masks = []
+        normalizer = normalizers.Sequence([NFD()])
 
         for text in texts:
+            text = normalizer.normalize_str(text)
             encoded_dict = tokenizer.encode_plus(
                                 text,            
                                 add_special_tokens = True,
