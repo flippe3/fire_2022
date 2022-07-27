@@ -1,2 +1,4 @@
 __pycache__/
 NLLB/
+task_a/pickles/
+task_b/pickles/

@@ -73,3 +73,33 @@ weighted avg       0.83      0.55      0.63      1766
    macro avg       0.44      0.40      0.40      1766
 weighted avg       0.81      0.58      0.65      1766
 ```
+## Info
+This was trained on:
+- [../data/Mal_sentiment_train.tsv](https://github.com/flippe3/fire_2022/tree/master/task_a/data/../data/Mal_sentiment_train.tsv)
+
+validated on:
+ - [../data/Mal_sentiment_dev.tsv](https://github.com/flippe3/fire_2022/tree/master/task_a/data/../data/Mal_sentiment_dev.tsv)
+
+Model: [sentence-transformers/paraphrase-xlm-r-multilingual-v1](https://huggingface.co/sentence-transformers/paraphrase-xlm-r-multilingual-v1)
+
+ Tokenizer: [sentence-transformers/paraphrase-xlm-r-multilingual-v1](https://huggingface.co/sentence-transformers/paraphrase-xlm-r-multilingual-v1)
+
+Hyperparameters:
+- Learning Rate: 3e-05
+- Epochs: 4
+- Batch Size: 16
+## Info
+This was trained on:
+- [../data/Mal_sentiment_train.tsv](https://github.com/flippe3/fire_2022/tree/master/task_a/data/../data/Mal_sentiment_train.tsv)
+
+validated on:
+ - [../data/Mal_sentiment_dev.tsv](https://github.com/flippe3/fire_2022/tree/master/task_a/data/../data/Mal_sentiment_dev.tsv)
+
+Model: [sentence-transformers/paraphrase-xlm-r-multilingual-v1](https://huggingface.co/sentence-transformers/paraphrase-xlm-r-multilingual-v1)
+
+ Tokenizer: [sentence-transformers/paraphrase-xlm-r-multilingual-v1](https://huggingface.co/sentence-transformers/paraphrase-xlm-r-multilingual-v1)
+
+Hyperparameters:
+- Learning Rate: 3e-05
+- Epochs: 4
+- Batch Size: 16

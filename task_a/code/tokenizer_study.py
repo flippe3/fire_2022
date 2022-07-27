@@ -1,4 +1,6 @@
 from transformers import AutoTokenizer, AutoModel
+from tokenizers import normalizers
+from tokenizers.normalizers import NFD
 
 #import os 
 #import torch
@@ -16,6 +18,11 @@ test = tam
 
 print(f"original: {test}\n")
 
+normalizer = normalizers.Sequence([NFD()])
+test = normalizer.normalize_str(test)
+
+print(f"normalized: {test}\n")
+
 encoded_input = tokenizer.encode_plus(
                                 test,            
                                 add_special_tokens = True,
@@ -29,4 +36,6 @@ encoded_input = tokenizer.encode_plus(
 
 print(f"encoded input: {encoded_input['input_ids'][0]}\n")
 decoded_input = tokenizer.convert_ids_to_tokens(encoded_input['input_ids'][0], skip_special_tokens=True)
+decoded_str = tokenizer.convert_tokens_to_string(decoded_input)
 print(f"decoded tokens: {decoded_input}")
+print(f"decoded string: {decoded_str}")

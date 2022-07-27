@@ -17,13 +17,13 @@ from tokenizers.normalizers import NFD
 
 class Dataset:
     # Fire 2022
-    fire_2022_tam_train = "../data/tam_sentiment_train.tsv"
+    fire_2022_tam_train = "../data/new_tam_train.tsv"
     fire_2022_tam_val = "../data/tam_sentiment_dev.tsv"
      
-    fire_2022_kan_train = "../data/kan_sentiment_train.tsv"
+    fire_2022_kan_train = "../data/new_kan_train.tsv"
     fire_2022_kan_val = "../data/kan_sentiment_dev.tsv"
      
-    fire_2022_mal_train = "../data/Mal_sentiment_train.tsv"
+    fire_2022_mal_train = "../data/new_mal_train.tsv"
     fire_2022_mal_val = "../data/Mal_sentiment_dev.tsv"
     
     # Fire 2021 TODO: check if this is test set or dev
@@ -55,8 +55,8 @@ class Dataset:
                 print(f"After balancing: {Counter(labels)}")
         
             labels = torch.tensor(labels, dtype=torch.long)
-            #dataset = TensorDataset(inputs, masks, labels)
-            dataset = TensorDataset(inputs, labels)
+            dataset = TensorDataset(inputs, masks, labels)
+            #dataset = TensorDataset(inputs, labels)
         else:
             texts = self.read_dataset(train_file, test)
             inputs, masks =  self.tokenize_input(texts, tokenizer)
@@ -120,9 +120,11 @@ class Dataset:
         #total_eval_loss = 0
         for step, batch in vbar:
             b_input_ids = batch[0].to(device)
-            b_labels = batch[1].to(device)
+            b_input_mask = batch[1].to(device)
+            b_labels = batch[2].to(device)
+
             with torch.no_grad(): 
-                outputs = model(input_ids=b_input_ids, 
+                outputs = model(input_ids=b_input_ids,attention_mask=b_input_mask, 
                                                 labels=b_labels)
                 #total_eval_loss += outputs.loss.item()
                 logits = outputs.logits.detach().cpu().numpy().tolist()
@@ -144,6 +146,7 @@ class Dataset:
     def read_dataset(self, path, test=False):
         df = pd.read_csv(path, '\t')
         texts = df.text.values
+
         if test == False:
             label_cats = df.category.astype('category').cat
             label_names = label_cats.categories

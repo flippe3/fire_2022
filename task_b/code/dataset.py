@@ -10,6 +10,8 @@ from imblearn.over_sampling import RandomOverSampler
 import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
+from tokenizers import normalizers
+from tokenizers.normalizers import NFD
 
 class Dataset:
     # English
@@ -17,15 +19,15 @@ class Dataset:
     eng_val = "../data/eng_3_dev.tsv"
     
     # Tamil
-    tam_train = "../data/tam_3_train.tsv"
+    tam_train = "../data/new_tam_train.tsv"
     tam_val = "../data/tam_3_dev.tsv"
      
     # Malayalam
-    mal_train = "../data/mal_3_train.csv"
+    mal_train = "../data/new_mal_train.tsv"
     mal_val = "../data/mal_3_dev.csv"
 
     # English-Tamil
-    eng_tam_train = "../data/eng-tam_3_train.tsv"
+    eng_tam_train = "../data/new_eng_tam_train.tsv"
     eng_tam_val = "../data/eng-tam_3_dev.tsv"
      
 
@@ -42,8 +44,7 @@ class Dataset:
                 print(f"After balancing: {Counter(labels)}")
         
             labels = torch.tensor(labels, dtype=torch.long)
-            #dataset = TensorDataset(inputs, masks, labels)
-            dataset = TensorDataset(inputs, labels)
+            dataset = TensorDataset(inputs, masks, labels)
         else:
             texts = self.read_dataset(train_file, test)
             inputs, masks =  self.tokenize_input(texts, tokenizer)
@@ -67,7 +68,7 @@ class Dataset:
         return eng_train, eng_val, tam_train, tam_val, mal_train, mal_val, eng_tam_train, eng_tam_val
 
     def validation(self, model, tokenizer, device, output_file, dataset, BS=16):
-        _, eng_val, _, tam_val, _, mal_val, _, eng_tam_val = self.get_fire_2020_dataset(tokenizer, balance=False)
+        _, eng_val, _, tam_val, _, mal_val, _, eng_tam_val = self.get_phobia_dataset(tokenizer, balance=False)
 
         if dataset == 'tam':
             loader = DataLoader(tam_val, sampler = SequentialSampler(tam_val), batch_size=BS)
@@ -87,9 +88,11 @@ class Dataset:
         #total_eval_loss = 0
         for step, batch in vbar:
             b_input_ids = batch[0].to(device)
-            b_labels = batch[1].to(device)
+            b_masks = batch[1].to(device)
+            b_labels = batch[2].to(device)
+
             with torch.no_grad(): 
-                outputs = model(input_ids=b_input_ids, 
+                outputs = model(input_ids=b_input_ids, attention_mask=b_masks,
                                                 labels=b_labels)
                 #total_eval_loss += outputs.loss.item()
                 logits = outputs.logits.detach().cpu().numpy().tolist()
@@ -107,10 +110,17 @@ class Dataset:
         f.close()
         model.train()
 
-
     def read_dataset(self, path, test=False):
-        df = pd.read_csv(path, '\t')
+        if path[-4:] == ".tsv":
+            df = pd.read_csv(path, '\t')
+        else:
+            df = pd.read_csv(path)
+        
+        df = df.dropna(subset=['text','category'])
+        df = df.drop_duplicates(subset='text')
+
         texts = df.text.values
+        
         if test == False:
             label_cats = df.category.astype('category').cat
             label_names = label_cats.categories
@@ -125,8 +135,10 @@ class Dataset:
     def tokenize_input(self, texts, tokenizer):        
         input_ids = []
         attention_masks = []
+        normalizer = normalizers.Sequence([NFD()])
 
         for text in texts:
+            text = normalizer.normalize_str(text)
             encoded_dict = tokenizer.encode_plus(
                                 text,            
                                 add_special_tokens = True,
@@ -142,3 +154,4 @@ class Dataset:
         input_ids = torch.cat(input_ids, dim=0)
         attention_masks = torch.cat(attention_masks, dim=0)
         return input_ids, attention_masks 
+
