@@ -152,8 +152,8 @@ class Dataset:
             label_names = label_cats.categories
             labels = label_cats.codes
 
-            #print("Texts:", len(texts))
-            #print("Label names:", label_names)
+            print("Texts:", len(texts))
+            print("Label names:", label_names)
             return labels, texts
         else:
             return texts

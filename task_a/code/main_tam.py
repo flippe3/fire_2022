@@ -84,6 +84,7 @@ def train():
 
         data.fire_validation(model, tokenizer, device, output_file=OUTPUT_FILE, year=2022, BS=BATCH_SIZE, dataset='tam')
 
-    torch.save(model, f"../pickles/task_a_tam_pickle-nodup.pt")
+    model.save_pretrained("../pickles_tam/")
+    
 
 train()

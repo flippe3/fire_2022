@@ -35,7 +35,7 @@ optimizer = AdamW(model.parameters(), lr = LEARNING_RATE, no_deprecation_warning
 data = Dataset()
 _,_, kan_train_2022, _, _,_ = data.get_fire_2022_dataset(tokenizer, balance=False)
 
-create_output(MODEL_NAME, TOKENIZER_NAME, [data.fire_2022_kan_train], data.fire_2022_kan_val, LEARNING_RATE, EPOCHS, BATCH_SIZE, OUTPUT_FILE)
+#create_output(MODEL_NAME, TOKENIZER_NAME, [data.fire_2022_kan_train], data.fire_2022_kan_val, LEARNING_RATE, EPOCHS, BATCH_SIZE, OUTPUT_FILE)
 
 train_dataloader = DataLoader(
             kan_train_2022,
@@ -83,7 +83,7 @@ def train():
         print("Running Validation...")
 
         data.fire_validation(model, tokenizer, device, output_file=OUTPUT_FILE, year=2022, BS=BATCH_SIZE, dataset='kan')
-
-    torch.save(model, f"../pickles/task_a_kan_pickle-nodup.pt")
+    model.save_pretrained("../pickles/")
+    
 
 train()

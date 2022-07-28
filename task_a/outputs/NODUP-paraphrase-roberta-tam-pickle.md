@@ -73,3 +73,78 @@ weighted avg       0.68      0.64      0.66      3962
    macro avg       0.49      0.52      0.50      3962
 weighted avg       0.66      0.63      0.64      3962
 ```
+## Info
+This was trained on:
+- [../data/new_tam_train.tsv](https://github.com/flippe3/fire_2022/tree/master/task_a/data/../data/new_tam_train.tsv)
+
+validated on:
+ - [../data/tam_sentiment_dev.tsv](https://github.com/flippe3/fire_2022/tree/master/task_a/data/../data/tam_sentiment_dev.tsv)
+
+Model: [sentence-transformers/paraphrase-xlm-r-multilingual-v1](https://huggingface.co/sentence-transformers/paraphrase-xlm-r-multilingual-v1)
+
+ Tokenizer: [sentence-transformers/paraphrase-xlm-r-multilingual-v1](https://huggingface.co/sentence-transformers/paraphrase-xlm-r-multilingual-v1)
+
+Hyperparameters:
+- Learning Rate: 3e-05
+- Epochs: 4
+- Batch Size: 24
+
+ 2022-07-27 10:05:19 
+```
+              precision    recall  f1-score   support
+
+           0       0.14      0.45      0.22       140
+           1       0.45      0.43      0.44       498
+           2       0.89      0.70      0.78      2863
+           3       0.56      0.68      0.61       145
+           4       0.28      0.54      0.37       316
+
+    accuracy                           0.64      3962
+   macro avg       0.46      0.56      0.48      3962
+weighted avg       0.75      0.64      0.68      3962
+```
+
+ 2022-07-27 10:24:54 
+```
+              precision    recall  f1-score   support
+
+           0       0.20      0.38      0.26       237
+           1       0.36      0.52      0.43       334
+           2       0.89      0.71      0.79      2816
+           3       0.51      0.64      0.57       140
+           4       0.38      0.53      0.44       435
+
+    accuracy                           0.65      3962
+   macro avg       0.47      0.56      0.50      3962
+weighted avg       0.73      0.65      0.68      3962
+```
+
+ 2022-07-27 10:44:27 
+```
+              precision    recall  f1-score   support
+
+           0       0.24      0.33      0.27       314
+           1       0.39      0.44      0.42       421
+           2       0.83      0.74      0.78      2520
+           3       0.56      0.64      0.60       152
+           4       0.43      0.47      0.45       555
+
+    accuracy                           0.63      3962
+   macro avg       0.49      0.53      0.50      3962
+weighted avg       0.67      0.63      0.65      3962
+```
+
+ 2022-07-27 11:04:01 
+```
+              precision    recall  f1-score   support
+
+           0       0.22      0.33      0.26       289
+           1       0.41      0.44      0.42       453
+           2       0.82      0.75      0.78      2477
+           3       0.57      0.63      0.60       161
+           4       0.45      0.47      0.46       582
+
+    accuracy                           0.64      3962
+   macro avg       0.49      0.52      0.51      3962
+weighted avg       0.66      0.64      0.65      3962
+```

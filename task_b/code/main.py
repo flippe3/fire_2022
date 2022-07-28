@@ -11,7 +11,7 @@ TOKENIZER_NAME = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 MODEL_NAME = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 LEARNING_RATE = 3e-5
 
-OUTPUT_FILE = "paraphrase-roberta-mal.md"
+OUTPUT_FILE = "paraphrase-roberta-tam.md"
 
 EPOCHS = 4
 BATCH_SIZE = 24
@@ -33,11 +33,11 @@ model.to(device)
 optimizer = AdamW(model.parameters(), lr = LEARNING_RATE, no_deprecation_warning=True)
 
 data = Dataset()
-_, _, _, _, mal_train_2022, _, _, _ = data.get_phobia_dataset(tokenizer, balance=False)
+_, _, traindata, _, _, _, _, _ = data.get_phobia_dataset(tokenizer, balance=False)
 
 train_dataloader = DataLoader(
-            mal_train_2022,
-            sampler = RandomSampler(mal_train_2022),
+            traindata,
+            sampler = RandomSampler(traindata),
             batch_size = BATCH_SIZE)
 
 total_steps = len(train_dataloader) * EPOCHS
@@ -80,6 +80,7 @@ def train():
         
         print("Running Validation...")
 
-        data.validation(model, tokenizer, device, output_file=OUTPUT_FILE, BS=BATCH_SIZE, dataset='mal')
-    torch.save(model, f"../pickles/task_b_mal.pt")
+        data.validation(model, tokenizer, device, output_file=OUTPUT_FILE, BS=BATCH_SIZE, dataset='tam')
+    #torch.save(model, f"../pickles/task_b_mal.pt")
+    model.save_pretrained("../pickles_tam/")
 train()
