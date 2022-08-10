@@ -11,7 +11,7 @@ TOKENIZER_NAME = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 MODEL_NAME = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 LEARNING_RATE = 3e-5
 
-OUTPUT_FILE = "paraphrase-roberta-tam.md"
+OUTPUT_FILE = "mixed_all_tam_val.md"
 
 EPOCHS = 4
 BATCH_SIZE = 24
@@ -25,7 +25,8 @@ if torch.cuda.is_available():
 else:
     print('NO GPU AVAILABLE ERROR')
     device = torch.device("cpu")
-   
+
+ 
 
 tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_NAME)
 model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=3, output_attentions=False)
@@ -33,11 +34,16 @@ model.to(device)
 optimizer = AdamW(model.parameters(), lr = LEARNING_RATE, no_deprecation_warning=True)
 
 data = Dataset()
-_, _, traindata, _, _, _, _, _ = data.get_phobia_dataset(tokenizer, balance=False)
+# eng_train, eng_val, tam_train, tam_val, mal_train, mal_val, eng_tam_train, eng_tam_val
+eng, _, tam, _, mal, _, engtam, _ = data.get_phobia_dataset(tokenizer, balance=False)
+
+print(len(eng))
+newdata = eng + tam + engtam + mal
+print(len(newdata))
 
 train_dataloader = DataLoader(
-            traindata,
-            sampler = RandomSampler(traindata),
+            newdata,
+            sampler = RandomSampler(newdata),
             batch_size = BATCH_SIZE)
 
 total_steps = len(train_dataloader) * EPOCHS
@@ -82,5 +88,5 @@ def train():
 
         data.validation(model, tokenizer, device, output_file=OUTPUT_FILE, BS=BATCH_SIZE, dataset='tam')
     #torch.save(model, f"../pickles/task_b_mal.pt")
-    model.save_pretrained("../pickles_tam/")
+    model.save_pretrained("../pickles_mixed_all/")
 train()

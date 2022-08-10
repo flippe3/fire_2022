@@ -154,3 +154,55 @@ weighted avg       0.88      0.84      0.86       621
    macro avg       0.59      0.68      0.62       621
 weighted avg       0.88      0.85      0.86       621
 ```
+
+ 2022-08-05 09:16:48 
+```
+              precision    recall  f1-score   support
+
+           0       0.66      0.51      0.58       124
+           1       0.91      0.90      0.91       494
+           2       0.09      1.00      0.16         3
+
+    accuracy                           0.82       621
+   macro avg       0.55      0.80      0.55       621
+weighted avg       0.86      0.82      0.84       621
+```
+
+ 2022-08-05 09:21:28 
+```
+              precision    recall  f1-score   support
+
+           0       0.52      0.73      0.60        67
+           1       0.96      0.89      0.93       527
+           2       0.46      0.59      0.52        27
+
+    accuracy                           0.86       621
+   macro avg       0.64      0.74      0.68       621
+weighted avg       0.89      0.86      0.87       621
+```
+
+ 2022-08-05 09:26:08 
+```
+              precision    recall  f1-score   support
+
+           0       0.53      0.72      0.61        69
+           1       0.95      0.90      0.92       519
+           2       0.54      0.58      0.56        33
+
+    accuracy                           0.86       621
+   macro avg       0.67      0.73      0.70       621
+weighted avg       0.88      0.86      0.87       621
+```
+
+ 2022-08-05 09:30:47 
+```
+              precision    recall  f1-score   support
+
+           0       0.63      0.73      0.68        82
+           1       0.95      0.91      0.93       510
+           2       0.57      0.69      0.62        29
+
+    accuracy                           0.88       621
+   macro avg       0.72      0.78      0.74       621
+weighted avg       0.89      0.88      0.88       621
+```
