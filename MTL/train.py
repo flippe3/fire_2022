@@ -6,7 +6,9 @@ from sklearn.metrics import classification_report
 from transformers import TOKENIZER_MAPPING, AutoModelForSequenceClassification, AutoTokenizer, AdamW, get_linear_schedule_with_warmup, XLMRobertaTokenizer, XLMRobertaForSequenceClassification
 import os
 from dataset import MTL_Dataset
-from model import MLTModel
+import transformers
+from model import MultitaskModel
+import nlp
 
 LEARNING_RATE = 3e-5
 
@@ -24,8 +26,6 @@ else:
     device = torch.device("cpu")
 
 tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-xlm-r-multilingual-v1')
-model = MLTModel()
-model.to(device)
 
 model_name = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 multitask_model = MultitaskModel.create(
@@ -39,3 +39,13 @@ multitask_model = MultitaskModel.create(
         "phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3)
     },
 )
+
+data = MTL_Dataset()
+
+kan_sentiment = nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_kan_train.tsv", 'test': "../task_a/data/kan_sentiment_dev.tsv"})
+mal_sentiment = nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_mal_train.tsv", 'test': "../task_a/data/Mal_sentiment_dev.tsv"})
+tam_sentiment = nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_tam_train.tsv", 'test': "../task_a/data/tam_sentiment_dev.tsv"})
+
+
+
+print(kan_sentiment)
