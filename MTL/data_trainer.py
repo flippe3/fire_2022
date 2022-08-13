@@ -6,12 +6,14 @@ import transformers
 import nlp
 import logging
 from torch.utils.data.dataloader import DataLoader
-from transformers.data.data_collator import DataCollator, InputDataClass
+from transformers.training_args import * 
+from transformers.trainer import * 
+from transformers.data.data_collator import DefaultDataCollator, InputDataClass
 from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data.sampler import RandomSampler
 from typing import List, Union, Dict
 
-class NLPDataCollator(DataCollator):
+class NLPDataCollator(DefaultDataCollator):
     """
     Extending the existing DataCollator to work with NLP dataset batches
     """
@@ -32,7 +34,7 @@ class NLPDataCollator(DataCollator):
           return batch
         else:
           # otherwise, revert to using the default collate_batch
-          return DefaultDataCollator().collate_batch(features)
+            return DefaultDataCollator().collate_batch(features)
 
 
 class StrIgnoreDevice(str):
@@ -55,6 +57,7 @@ class DataLoaderWithTaskname:
 
         self.batch_size = data_loader.batch_size
         self.dataset = data_loader.dataset
+        print(self.task_name, len(self.dataset), self.batch_size, self.data_loader)
 
     def __len__(self):
         return len(self.data_loader)
@@ -63,7 +66,7 @@ class DataLoaderWithTaskname:
         for batch in self.data_loader:
             batch["task_name"] = StrIgnoreDevice(self.task_name)
             yield batch
-
+    
 
 class MultitaskDataloader:
     """
@@ -114,14 +117,12 @@ class MultitaskTrainer(transformers.Trainer):
         """
         if self.train_dataset is None:
             raise ValueError("Trainer: training requires a train_dataset.")
-        if is_tpu_available():
-            train_sampler = get_tpu_sampler(train_dataset)
-        else:
-            train_sampler = (
-                RandomSampler(train_dataset)
-                if self.args.local_rank == -1
-                else DistributedSampler(train_dataset)
-            )
+
+        train_sampler = (
+            RandomSampler(train_dataset)
+            if self.args.local_rank == -1
+            else DistributedSampler(train_dataset)
+        )
 
         data_loader = DataLoaderWithTaskname(
             task_name=task_name,
@@ -132,11 +133,6 @@ class MultitaskTrainer(transformers.Trainer):
               collate_fn=self.data_collator.collate_batch,
             ),
         )
-
-        if is_tpu_available():
-            data_loader = pl.ParallelLoader(
-                data_loader, [self.args.device]
-            ).per_device_loader(self.args.device)
         return data_loader
 
     def get_train_dataloader(self):
