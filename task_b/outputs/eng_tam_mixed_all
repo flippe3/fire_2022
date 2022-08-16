@@ -1,0 +1,11 @@
+
+eng_tam
+              precision    recall  f1-score   support
+
+  Homophobic       0.33      0.42      0.37        53
+NonAntiLGBTQ+      0.97      0.93      0.95       888
+ Transphobic       0.47      0.82      0.60        22
+
+    accuracy                           0.90       963
+   macro avg       0.59      0.72      0.64       963
+weighted avg       0.92      0.90      0.91       963
