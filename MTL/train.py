@@ -15,7 +15,7 @@ LEARNING_RATE = 3e-5
 
 EPOCHS = 4
 BATCH_SIZE = 24
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
 
 if torch.cuda.is_available():    
     device = torch.device("cuda")
@@ -32,36 +32,36 @@ model_name = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 multitask_model = MultitaskModel.create(
     model_name=model_name,
     model_type_dict={
-        "kan_sentiment": transformers.AutoModelForSequenceClassification,
-        "mal_sentiment": transformers.AutoModelForSequenceClassification,
-        # "tam_sentiment": transformers.AutoModelForSequenceClassification,
-        # "eng_phobia": transformers.AutoModelForSequenceClassification,
-        # "tam_phobia": transformers.AutoModelForSequenceClassification,
-        # "mal_phobia": transformers.AutoModelForSequenceClassification,
-        # "eng_tam_phobia": transformers.AutoModelForSequenceClassification
+        #"kan_sentiment": transformers.AutoModelForSequenceClassification,
+        #"mal_sentiment": transformers.AutoModelForSequenceClassification,
+        "tam_sentiment": transformers.AutoModelForSequenceClassification,
+        #"eng_phobia": transformers.AutoModelForSequenceClassification,
+        "tam_phobia": transformers.AutoModelForSequenceClassification,
+        #"mal_phobia": transformers.AutoModelForSequenceClassification,
+        #"eng_tam_phobia": transformers.AutoModelForSequenceClassification
     },
     model_config_dict={
-        "kan_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
-        "mal_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
-        # "tam_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
+        #"kan_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
+        #"mal_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
+        "tam_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
         # "eng_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3),
-        # "tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3),
-        # "mal_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3),
-        # "eng_tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3)
+        "tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3),
+        #"mal_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3),
+        #"eng_tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3)
     },
 )
-
+    
 #data = MTL_Dataset()
 
 dataset_dict = {
-    'kan_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_kan_train.tsv", 'test': "../task_a/data/kan_sentiment_dev.tsv"}),
-    'mal_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_mal_train.tsv", 'test': "../task_a/data/Mal_sentiment_dev.tsv"}),
-    # 'tam_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_tam_train.tsv", 'test': "../task_a/data/tam_sentiment_dev.tsv"}),
+    #'kan_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_kan_train.tsv", 'test': "../task_a/data/kan_sentiment_dev.tsv"}),
+    #'mal_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_mal_train.tsv", 'test': "../task_a/data/Mal_sentiment_dev.tsv"}),
+    'tam_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_tam_train.tsv", 'test': "../task_a/data/tam_sentiment_dev.tsv"}),
 
-    # 'eng_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/eng_3_train.tsv", 'test': "../task_b/data/eng_3_dev.tsv"}),
-    # 'tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_tam_train.tsv", 'test': "../task_b/data/tam_3_dev.tsv"}),
-    # 'mal_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_mal_train.tsv", 'test': "../task_b/data/mal_3_dev.tsv"}),
-    # 'eng_tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_eng_tam_train.tsv", 'test': "../task_b/data/eng-tam_3_dev.tsv"}),
+#    'eng_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/eng_3_train.tsv", 'test': "../task_b/data/eng_3_dev.tsv"}),
+    'tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_tam_train.tsv", 'test': "../task_b/data/tam_3_dev.tsv"}),
+    #'mal_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_mal_train.tsv", 'test': "../task_b/data/mal_3_dev.tsv"}),
+    #'eng_tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_eng_tam_train.tsv", 'test': "../task_b/data/eng-tam_3_dev.tsv"}),
 }
 
 def convert_to_mal(example_batch):
@@ -117,25 +117,75 @@ def convert_to_kan(example_batch):
     features["labels"] = new_labels 
     return features
 
+def convert_to_tam(example_batch):
+    features = {}
+    features = tokenizer.batch_encode_plus(
+                                    example_batch['text'],            
+                                    add_special_tokens = True,
+                                    max_length = 512,
+                                    padding = 'max_length',
+                                    return_attention_mask = True,
+                                    truncation=True)
+    new_labels = []
+    for i in example_batch['category']:
+        if i == "Positive":
+            new_labels.append(0)
+        elif i == "Negative":
+            new_labels.append(1)
+        elif i == "not-Tamil":
+            new_labels.append(2)
+        elif i == "unknown_state":
+            new_labels.append(3)
+        elif i == "Mixed_feelings":
+            new_labels.append(4)
+        else:
+            print("Error", i)
+
+    features["labels"] = new_labels 
+    return features
+
+def convert_to_phobia(example_batch):
+    features = {}
+    features = tokenizer.batch_encode_plus(
+                                    example_batch['text'],            
+                                    add_special_tokens = True,
+                                    max_length = 512,
+                                    padding = 'max_length',
+                                    return_attention_mask = True,
+                                    truncation=True)
+    new_labels = []
+    for i in example_batch['category']:
+        if i == "Non-anti-LGBT+ content":
+            new_labels.append(0)
+        elif i == "Homophobic":
+            new_labels.append(1)
+        elif i == "Transphobic":
+            new_labels.append(2)
+        else:
+            print("Error", i)
+
+    features["labels"] = new_labels 
+    return features
+    
 convert_func_dict = {
     "kan_sentiment": convert_to_kan,
     "mal_sentiment": convert_to_mal,
-    #"tam_sentiment": convert_to_features,
-    # "eng_phobia": convert_to_features,
-    # "tam_phobia": convert_to_features,
-    # "mal_phobia": convert_to_features,
-    # "eng_tam_phobia": convert_to_features,
+    "tam_sentiment": convert_to_tam,
+    "eng_phobia": convert_to_phobia,
+    "tam_phobia": convert_to_phobia,
+    "mal_phobia": convert_to_phobia,
+    "eng_tam_phobia": convert_to_phobia,
 }
 
 columns_dict = {
     "kan_sentiment": ['input_ids', 'attention_mask', 'labels'],
     "mal_sentiment": ['input_ids', 'attention_mask', 'labels'],
-    # "tam_sentiment": ['input_ids', 'attention_mask', 'labels'],
+    "tam_sentiment": ['input_ids', 'attention_mask', 'labels'],
     
-    # "eng_phobia": ['input_ids', 'attention_mask', 'labels'],
-    # "tam_phobia": ['input_ids', 'attention_mask', 'labels'],
-    # "mal_phobia": ['input_ids', 'attention_mask', 'labels'],
-    # "eng_tam_phobia": ['input_ids', 'attention_mask', 'labels'],
+    "eng_phobia": ['input_ids', 'attention_mask', 'labels'],
+    "tam_phobia": ['input_ids', 'attention_mask', 'labels'],
+    "mal_phobia": ['input_ids', 'attention_mask', 'labels'],
+    "eng_tam_phobia": ['input_ids', 'attention_mask', 'labels'],
 }
 
 
@@ -158,8 +208,6 @@ train_dataset = {
 		task_name: dataset["train"] for task_name, dataset in features_dict.items()
 }
 
-print(train_dataset)
-
 trainer = MultitaskTrainer(
     model=multitask_model,
     args=transformers.TrainingArguments(
@@ -167,11 +215,54 @@ trainer = MultitaskTrainer(
         overwrite_output_dir=True,
         learning_rate=3e-5,
         do_train=True,
-        num_train_epochs=3,
-        per_device_train_batch_size=16,
+        num_train_epochs=5,
+        per_device_train_batch_size=32,
         save_steps=3000,
     ),
     data_collator=NLPDataCollator(),
     train_dataset=train_dataset,
 )
 trainer.train()
+
+preds_dict = {}
+for task_name in ["tam_phobia", "tam_sentiment"]:
+    print("Starting validation", task_name)
+    eval_dataloader = DataLoaderWithTaskname(
+        task_name,
+        trainer.get_eval_dataloader(eval_dataset=features_dict[task_name]["test"])
+    )
+    print(eval_dataloader.data_loader.collate_fn)
+    preds_dict[task_name] = trainer.evaluation_loop(
+        eval_dataloader,
+        description=f"Validation: {task_name}",
+    )
+
+from sklearn.metrics import classification_report
+
+preds = np.argmax(preds_dict['tam_phobia'].predictions ,axis=1)
+ground_truth = features_dict['tam_phobia']['test']['labels']
+
+print("Phobia:\n", classification_report(preds, ground_truth))
+
+f = open('output_tam', 'w')
+f.write("Tam Phobia\n")
+f.write(classification_report(preds, ground_truth))
+f.write("-----------------------------------------")
+
+preds = np.argmax(preds_dict['tam_sentiment'].predictions ,axis=1)
+ground_truth = features_dict['tam_sentiment']['test']['labels']
+
+f.write("Tam Sentiment\n")
+f.write(classification_report(preds, ground_truth))
+f.write("-----------------------------------------")
+print("Sentiment:\n", classification_report(preds, ground_truth))
+
+# preds = np.argmax(preds_dict['eng_tam_phobia'].predictions ,axis=1)
+# ground_truth = features_dict['eng_tam_phobia']['test']['labels']
+
+# f.write("Eng Tam Phobia\n")
+# f.write(classification_report(preds, ground_truth))
+# f.write("-----------------------------------------")
+# f.close()
+
+# print("Eng Tam Phobia:\n", classification_report(preds, ground_truth))

@@ -82,9 +82,9 @@ weighted avg       0.85      0.83      0.84       621
 ```
               precision    recall  f1-score   support
 
-           0       0.56      0.69      0.62        77
-           1       0.95      0.91      0.93       517
-           2       0.49      0.63      0.55        27
+   Homophobic      0.56      0.69      0.62        77
+NonAntiLGBTQ+      0.95      0.91      0.93       517
+  Transphobic      0.49      0.63      0.55        27
 
     accuracy                           0.87       621
    macro avg       0.67      0.74      0.70       621

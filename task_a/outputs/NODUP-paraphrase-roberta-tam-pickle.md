@@ -138,11 +138,11 @@ weighted avg       0.67      0.63      0.65      3962
 ```
               precision    recall  f1-score   support
 
-           0       0.22      0.33      0.26       289
-           1       0.41      0.44      0.42       453
-           2       0.82      0.75      0.78      2477
-           3       0.57      0.63      0.60       161
-           4       0.45      0.47      0.46       582
+ Mixed Feelings   0.22      0.33      0.26       289
+       Negative   0.41      0.44      0.42       453
+      Postitive   0.82      0.75      0.78      2477
+      Not-Tamil   0.57      0.63      0.60       161
+   unkown_state   0.45      0.47      0.46       582
 
     accuracy                           0.64      3962
    macro avg       0.49      0.52      0.51      3962

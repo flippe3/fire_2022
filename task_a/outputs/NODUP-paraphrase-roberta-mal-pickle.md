@@ -93,11 +93,11 @@ weighted avg       0.76      0.74      0.75      1766
 ```
               precision    recall  f1-score   support
 
-           0       0.46      0.50      0.48        94
-           1       0.62      0.67      0.64       222
-           2       0.85      0.77      0.81       774
-           3       0.79      0.90      0.85       124
-           4       0.72      0.75      0.73       552
+Mixed Feelings     0.46      0.50      0.48        94
+      Negative     0.62      0.67      0.64       222
+     Postitive     0.85      0.77      0.81       774
+ Not-Malayalam     0.79      0.90      0.85       124
+  unkown_state     0.72      0.75      0.73       552
 
     accuracy                           0.75      1766
    macro avg       0.69      0.72      0.70      1766

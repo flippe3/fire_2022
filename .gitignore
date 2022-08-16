@@ -3,3 +3,4 @@ NLLB/
 task_a/pickles*
 task_b/pickles*
 IMDB/pickles*
+MTL/output_trainer/checkpoint*
