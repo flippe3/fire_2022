@@ -28,12 +28,25 @@ class MultitaskModel(transformers.PreTrainedModel):
             model = model_type.from_pretrained(
                 model_name, 
                 config=model_config_dict[task_name],
+            
             )
+            # print(task_name, model_type)
+
+            # f = open("MTL_MODEL_params", 'w')
+            # f.write(str(model))
+            # f.close()
+
+            #for param in model.parameters():
+            #    param.requires_grad=False
+
+        
             if shared_encoder is None:
                 shared_encoder = getattr(model, cls.get_encoder_attr_name(model))
             else:
                 setattr(model, cls.get_encoder_attr_name(model), shared_encoder)
             taskmodels_dict[task_name] = model
+
+
         return cls(encoder=shared_encoder, taskmodels_dict=taskmodels_dict)
 
     @classmethod

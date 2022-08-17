@@ -10,11 +10,12 @@ import transformers
 from model import MultitaskModel
 from data_trainer import *
 from datasets import load_dataset
+from three_layer_model import CustomPhobiaModel
 
 LEARNING_RATE = 3e-5
 
 EPOCHS = 4
-BATCH_SIZE = 24
+BATCH_SIZE = 8  
 os.environ["CUDA_VISIBLE_DEVICES"]="1"
 
 if torch.cuda.is_available():    
@@ -45,12 +46,11 @@ multitask_model = MultitaskModel.create(
         #"mal_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
         "tam_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
         # "eng_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3),
-        "tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3),
+        "tam_phobia": CustomPhobiaModel,
         #"mal_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3),
-        #"eng_tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3)
+        "eng_tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3)
     },
 )
-    
 #data = MTL_Dataset()
 
 dataset_dict = {
@@ -61,7 +61,7 @@ dataset_dict = {
 #    'eng_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/eng_3_train.tsv", 'test': "../task_b/data/eng_3_dev.tsv"}),
     'tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_tam_train.tsv", 'test': "../task_b/data/tam_3_dev.tsv"}),
     #'mal_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_mal_train.tsv", 'test': "../task_b/data/mal_3_dev.tsv"}),
-    #'eng_tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_eng_tam_train.tsv", 'test': "../task_b/data/eng-tam_3_dev.tsv"}),
+    'eng_tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_eng_tam_train.tsv", 'test': "../task_b/data/eng-tam_3_dev.tsv"}),
 }
 
 def convert_to_mal(example_batch):
@@ -225,7 +225,7 @@ trainer = MultitaskTrainer(
 trainer.train()
 
 preds_dict = {}
-for task_name in ["tam_phobia", "tam_sentiment"]:
+for task_name in ["tam_phobia", "tam_sentiment", "eng_tam_phobia"]:
     print("Starting validation", task_name)
     eval_dataloader = DataLoaderWithTaskname(
         task_name,
@@ -242,9 +242,9 @@ from sklearn.metrics import classification_report
 preds = np.argmax(preds_dict['tam_phobia'].predictions ,axis=1)
 ground_truth = features_dict['tam_phobia']['test']['labels']
 
-print("Phobia:\n", classification_report(preds, ground_truth))
+print("Phobia:\n", classification_report(preds, ground_truth, target_names=['Non-Anti-LGBTQ+', 'Homophobic', 'Transphobic']))
 
-f = open('output_tam', 'w')
+f = open('output_tam_SPECIAL_PHOBIA_LAYER', 'w')
 f.write("Tam Phobia\n")
 f.write(classification_report(preds, ground_truth))
 f.write("-----------------------------------------")
@@ -255,14 +255,14 @@ ground_truth = features_dict['tam_sentiment']['test']['labels']
 f.write("Tam Sentiment\n")
 f.write(classification_report(preds, ground_truth))
 f.write("-----------------------------------------")
-print("Sentiment:\n", classification_report(preds, ground_truth))
+print("Sentiment:\n", classification_report(preds, ground_truth, target_names=['Positive', 'Negative', 'not-lang', 'unknown_state', 'Mixed_feelings']))
 
-# preds = np.argmax(preds_dict['eng_tam_phobia'].predictions ,axis=1)
-# ground_truth = features_dict['eng_tam_phobia']['test']['labels']
+preds = np.argmax(preds_dict['eng_tam_phobia'].predictions ,axis=1)
+ground_truth = features_dict['eng_tam_phobia']['test']['labels']
 
-# f.write("Eng Tam Phobia\n")
-# f.write(classification_report(preds, ground_truth))
-# f.write("-----------------------------------------")
-# f.close()
+f.write("Eng Tam Phobia\n")
+f.write(classification_report(preds, ground_truth))
+f.write("-----------------------------------------")
+f.close()
 
-# print("Eng Tam Phobia:\n", classification_report(preds, ground_truth))
+print("Eng Tam Phobia:\n", classification_report(preds, ground_truth, target_names=['Positive', 'Negative', 'not-lang', 'unknown_state', 'Mixed_feelings']))
