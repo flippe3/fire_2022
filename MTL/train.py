@@ -216,7 +216,7 @@ trainer = MultitaskTrainer(
         learning_rate=3e-5,
         do_train=True,
         num_train_epochs=5,
-        per_device_train_batch_size=32,
+        per_device_train_batch_size=BATCH_SIZE,
         save_steps=3000,
     ),
     data_collator=NLPDataCollator(),
