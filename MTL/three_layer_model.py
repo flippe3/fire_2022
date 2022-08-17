@@ -7,9 +7,9 @@ class CustomPhobiaModel(nn.Module):
           self.model = AutoModelForSequenceClassification.from_pretrained("sentence-transformers/paraphrase-xlm-r-multilingual-v1")
           # add your additional layers here, for example a dropout layer followed by a linear classification head
           print("INITIATING THE MODEL")
-          self.l1 = nn.Linear(768, 3000)
-          self.dp1 = nn.Dropout(0.1)
-          self.l2 = nn.Linear(3000, 768)
+          #self.l1 = nn.Linear(768, 768)
+          #self.dp1 = nn.Dropout(0.1)
+          #self.l2 = nn.Linear(768, 768)
           self.dp2 = nn.Dropout(0.1)
           self.out = nn.Linear(768, 3)
 
@@ -21,9 +21,9 @@ class CustomPhobiaModel(nn.Module):
           )
           
           # we apply dropout to the sequence output, tensor has shape (batch_size, sequence_length, 768)
-          sequence_output = self.dp1(sequence_output)
+#          sequence_output = self.dp1(sequence_output)
     
-          sequence_output = self.l1(sequence_output)
+#          sequence_output = self.l1(sequence_output)
           
           sequence_output = self.dp2(sequence_output)
     
