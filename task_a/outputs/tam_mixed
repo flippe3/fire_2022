@@ -1,0 +1,30 @@
+
+ 2022-08-17 13:05:44 
+```
+              precision    recall  f1-score   support
+
+           0       0.23      0.27      0.25       371
+           1       0.36      0.42      0.39       406
+           2       0.79      0.74      0.77      2411
+           3       0.54      0.51      0.52       187
+           4       0.44      0.46      0.45       587
+
+    accuracy                           0.61      3962
+   macro avg       0.47      0.48      0.48      3962
+weighted avg       0.63      0.61      0.62      3962
+```
+
+ 2022-08-17 13:12:37 
+```
+                precision    recall  f1-score   support
+
+Mixed Feelings       0.23      0.27      0.25       371
+      Negative       0.36      0.42      0.39       406
+      Positive       0.79      0.74      0.77      2411
+      not-Lang       0.54      0.51      0.52       187
+ unknown_state       0.44      0.46      0.45       587
+
+      accuracy                           0.61      3962
+     macro avg       0.47      0.48      0.48      3962
+  weighted avg       0.63      0.61      0.62      3962
+```

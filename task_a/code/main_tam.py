@@ -10,13 +10,16 @@ from util import create_output
 
 TOKENIZER_NAME = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 MODEL_NAME = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
+
+TOKENIZER_NAME = "bert-base-multilingual-cased"
+MODEL_NAME = "bert-base-multilingual-cased" 
 LEARNING_RATE = 3e-5
 
 OUTPUT_FILE = "NODUP-paraphrase-roberta-tam-pickle.md"
 
 EPOCHS = 4
-BATCH_SIZE = 24 
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+BATCH_SIZE = 16 
+os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
 if torch.cuda.is_available():    
     device = torch.device("cuda")
@@ -33,7 +36,7 @@ model.to(device)
 optimizer = AdamW(model.parameters(), lr = LEARNING_RATE, no_deprecation_warning=True)
 
 data = Dataset()
-tam_train_2022,_, _, _, _,_ = data.get_fire_2022_dataset(tokenizer, balance=False)
+tam_train_2022,_, kan_train_2022, _, mal_train,_ = data.get_fire_2022_dataset(tokenizer, balance=False)
 
 create_output(MODEL_NAME, TOKENIZER_NAME, [data.fire_2022_tam_train], data.fire_2022_tam_val, LEARNING_RATE, EPOCHS, BATCH_SIZE, OUTPUT_FILE)
 
@@ -48,6 +51,8 @@ scheduler = get_linear_schedule_with_warmup(optimizer,
                                             num_warmup_steps = 0,
                                             num_training_steps = total_steps)
 
+
+print(len(train_dataloader))
 def train():
     for epoch_i in range(0, EPOCHS):
         print('======== Epoch {:} / {:} ========'.format(epoch_i + 1, EPOCHS))
@@ -84,7 +89,7 @@ def train():
 
         data.fire_validation(model, tokenizer, device, output_file=OUTPUT_FILE, year=2022, BS=BATCH_SIZE, dataset='tam')
 
-    model.save_pretrained("../pickles_tam/")
+    model.save_pretrained("../pickles_BERT/")
     
 
 train()

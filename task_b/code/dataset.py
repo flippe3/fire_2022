@@ -116,9 +116,13 @@ class Dataset:
         else:
             df = pd.read_csv(path)
         
+        print(f"path:{path} len: {len(df)}")
+
         df = df.dropna(subset=['text','category'])
         df = df.drop_duplicates(subset='text')
 
+        print(f"path:{path} NEW len: {len(df)}")
+        
         texts = df.text.values
         
         if test == False:

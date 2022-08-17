@@ -1,0 +1,44 @@
+
+mal phobia
+                 precision    recall  f1-score   support
+
+     Homophobic       0.50      0.82      0.62        71
+Non-Anti-LGBTQ+       0.97      0.90      0.93       741
+    Transphobic       0.34      0.52      0.41        25
+
+       accuracy                           0.88       837
+      macro avg       0.61      0.74      0.66       837
+   weighted avg       0.91      0.88      0.89       837
+
+eng phobia
+                 precision    recall  f1-score   support
+
+     Homophobic       0.38      0.76      0.51        29
+Non-Anti-LGBTQ+       0.99      0.95      0.97       761
+    Transphobic       0.00      0.00      0.00         0
+
+       accuracy                           0.94       790
+      macro avg       0.46      0.57      0.49       790
+   weighted avg       0.97      0.94      0.95       790
+
+tam phobia
+                 precision    recall  f1-score   support
+
+     Homophobic       0.68      0.65      0.66       100
+Non-Anti-LGBTQ+       0.93      0.93      0.93       497
+    Transphobic       0.49      0.59      0.53        29
+
+       accuracy                           0.87       626
+      macro avg       0.70      0.72      0.71       626
+   weighted avg       0.87      0.87      0.87       626
+
+eng_tam phobia
+                 precision    recall  f1-score   support
+
+     Homophobic       0.33      0.42      0.37        53
+Non-Anti-LGBTQ+       0.97      0.93      0.95       888
+    Transphobic       0.47      0.82      0.60        22
+
+       accuracy                           0.90       963
+      macro avg       0.59      0.72      0.64       963
+   weighted avg       0.92      0.90      0.91       963

@@ -14,9 +14,6 @@ from torch.utils.data.sampler import RandomSampler
 from typing import List, Union, Dict
 
 class NLPDataCollator(DefaultDataCollator):
-    """
-    Extending the existing DataCollator to work with NLP dataset batches
-    """
     def collate_batch(self, features: List[Union[InputDataClass, Dict]]) -> Dict[str, torch.Tensor]:
         first = features[0]
         if isinstance(first, dict):
@@ -38,19 +35,11 @@ class NLPDataCollator(DefaultDataCollator):
 
 
 class StrIgnoreDevice(str):
-    """
-    This is a hack. The Trainer is going call .to(device) on every input
-    value, but we need to pass in an additional `task_name` string.
-    This prevents it from throwing an error
-    """
     def to(self, device):
         return self
 
 
 class DataLoaderWithTaskname:
-    """
-    Wrapper around a DataLoader to also yield a task name
-    """
     def __init__(self, task_name, data_loader):
         self.task_name = task_name
         self.data_loader = data_loader
@@ -69,10 +58,6 @@ class DataLoaderWithTaskname:
     
 
 class MultitaskDataloader:
-    """
-    Data loader that combines and samples from multiple single-task
-    data loaders.
-    """
     def __init__(self, dataloader_dict):
         self.dataloader_dict = dataloader_dict
         self.num_batches_dict = {
@@ -89,13 +74,6 @@ class MultitaskDataloader:
         return sum(self.num_batches_dict.values())
 
     def __iter__(self):
-        """
-        For each batch, sample a task, and yield a batch from the respective
-        task Dataloader.
-
-        We use size-proportional sampling, but you could easily modify this
-        to sample from some-other distribution.
-        """
         task_choice_list = []
         for i, task_name in enumerate(self.task_name_list):
             task_choice_list += [i] * self.num_batches_dict[task_name]
@@ -112,9 +90,6 @@ class MultitaskDataloader:
 class MultitaskTrainer(transformers.Trainer):
 
     def get_single_train_dataloader(self, task_name, train_dataset):
-        """
-        Create a single-task data loader that also yields task names
-        """
         if self.train_dataset is None:
             raise ValueError("Trainer: training requires a train_dataset.")
 
@@ -136,11 +111,6 @@ class MultitaskTrainer(transformers.Trainer):
         return data_loader
 
     def get_train_dataloader(self):
-        """
-        Returns a MultitaskDataloader, which is not actually a Dataloader
-        but an iterable that returns a generator that samples from each 
-        task Dataloader
-        """
         return MultitaskDataloader({
             task_name: self.get_single_train_dataloader(task_name, task_dataset)
             for task_name, task_dataset in self.train_dataset.items()

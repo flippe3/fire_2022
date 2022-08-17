@@ -133,11 +133,11 @@ class Dataset:
                 true_labels.extend(label_ids)
                 pred_labels.extend(np.argmax(logits,axis=1))
 
-        print(classification_report(pred_labels, true_labels))
+        print(classification_report(pred_labels, true_labels, target_names=['Mixed Feelings', 'Negative', 'Positive', 'not-'+dataset, 'unknown_state']))
         f = open("../outputs/"+output_file, 'a')
         f.write(f"\n {datetime.today().strftime('%Y-%m-%d %H:%M:%S')} \n")
         f.write("```\n")
-        f.write(classification_report(pred_labels, true_labels))
+        f.write(classification_report(pred_labels, true_labels, target_names=['Mixed Feelings', 'Negative', 'Positive', 'not-Lang', 'unknown_state']))
         f.write("```\n")
         f.close()
         model.train()
