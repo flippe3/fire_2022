@@ -1,6 +1,8 @@
 import torch.nn as nn
 from transformers import AutoModelForSequenceClassification
 import transformers
+from three_layer_model import CustomPhobiaModel
+from transformers.models.roberta.modeling_roberta import RobertaClassificationHead
 
 class MultitaskModel(transformers.PreTrainedModel):
     def __init__(self, encoder, taskmodels_dict):
@@ -26,25 +28,28 @@ class MultitaskModel(transformers.PreTrainedModel):
         taskmodels_dict = {}
         for task_name, model_type in model_type_dict.items():
             model = model_type.from_pretrained(
-                model_name, 
-                config=model_config_dict[task_name],
-            
+            model_name, 
+            config=model_config_dict[task_name],
             )
-            # print(task_name, model_type)
+            print(task_name)
+            print(str(RobertaClassificationHead))
+            if str(task_name)[-6:] == 'phobia':
+                model.classifier = RobertaClassificationHead(model_config_dict[task_name]) 
+                model.num_labels = 3
+            else:
+                model.classifier = RobertaClassificationHead(model_config_dict[task_name]) 
+                model.num_labels = 5
 
-            # f = open("MTL_MODEL_params", 'w')
-            # f.write(str(model))
-            # f.close()
-
-            #for param in model.parameters():
-            #    param.requires_grad=False
-
-        
             if shared_encoder is None:
                 shared_encoder = getattr(model, cls.get_encoder_attr_name(model))
             else:
                 setattr(model, cls.get_encoder_attr_name(model), shared_encoder)
+
             taskmodels_dict[task_name] = model
+            f = open('ModelDesign_Run1', 'a')
+            f.write(str(task_name)+'\n')
+            f.write(str(model))
+            f.write('\n')
 
 
         return cls(encoder=shared_encoder, taskmodels_dict=taskmodels_dict)
@@ -63,6 +68,8 @@ class MultitaskModel(transformers.PreTrainedModel):
         elif model_class_name.startswith("Albert"):
             return "albert"
         elif model_class_name.startswith("XLM"):
+            return "roberta"
+        elif model_class_name.startswith("Custom"):
             return "roberta"
         else:
             raise KeyError(f"Add support for new model {model_class_name}")

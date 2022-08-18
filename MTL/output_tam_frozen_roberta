@@ -1,0 +1,77 @@
+Tam Sentiment
+              precision    recall  f1-score   support
+
+           0       0.95      0.61      0.74      3505
+           1       0.08      0.34      0.13       112
+           2       0.30      0.54      0.38        97
+           3       0.14      0.40      0.21       210
+           4       0.04      0.45      0.07        38
+
+    accuracy                           0.59      3962
+   macro avg       0.30      0.47      0.31      3962
+weighted avg       0.86      0.59      0.68      3962
+-----------------------------------------Kan Sentiment
+              precision    recall  f1-score   support
+
+           0       0.85      0.58      0.69       467
+           1       0.42      0.60      0.49        97
+           2       0.47      0.59      0.53        88
+           3       0.32      0.56      0.41        39
+           4       0.00      0.00      0.00         0
+
+    accuracy                           0.58       691
+   macro avg       0.41      0.47      0.42       691
+weighted avg       0.71      0.58      0.63       691
+-----------------------------------------Mal Sentiment
+              precision    recall  f1-score   support
+
+           0       0.81      0.55      0.65      1047
+           1       0.09      0.63      0.16        35
+           2       0.48      0.69      0.57        99
+           3       0.58      0.58      0.58       582
+           4       0.02      0.67      0.04         3
+
+    accuracy                           0.57      1766
+   macro avg       0.40      0.62      0.40      1766
+weighted avg       0.70      0.57      0.61      1766
+-----------------------------------------Tam Phobia
+                 precision    recall  f1-score   support
+
+Non-Anti-LGBTQ+       0.96      0.83      0.89       608
+     Homophobic       0.32      0.58      0.41        57
+    Transphobic       0.03      1.00      0.05         1
+
+       accuracy                           0.81       666
+      macro avg       0.44      0.80      0.45       666
+   weighted avg       0.90      0.81      0.85       666
+Eng Phobia
+                 precision    recall  f1-score   support
+
+Non-Anti-LGBTQ+       1.00      0.93      0.96       789
+     Homophobic       0.05      1.00      0.10         3
+    Transphobic       0.00      0.00      0.00         0
+
+       accuracy                           0.93       792
+      macro avg       0.35      0.64      0.35       792
+   weighted avg       1.00      0.93      0.96       792
+Mal Phobia
+                 precision    recall  f1-score   support
+
+Non-Anti-LGBTQ+       1.00      0.80      0.89       864
+     Homophobic       0.02      1.00      0.03         2
+    Transphobic       0.00      0.00      0.00         0
+
+       accuracy                           0.80       866
+      macro avg       0.34      0.60      0.31       866
+   weighted avg       1.00      0.80      0.89       866
+-----------------------------------------Eng Tam Phobia
+              precision    recall  f1-score   support
+
+           0       1.00      0.90      0.95       958
+           1       0.08      0.62      0.14         8
+           2       0.00      0.00      0.00         0
+
+    accuracy                           0.90       966
+   macro avg       0.36      0.51      0.36       966
+weighted avg       0.99      0.90      0.94       966
+-----------------------------------------
