@@ -1,14 +1,3 @@
-Mal Phobia
-              precision    recall  f1-score   support
-
-NonAntiLGBTQ+      0.96      0.89      0.93       748
-  Homophobic       0.60      0.79      0.68       101
- Transphobic       0.20      0.47      0.28        17
-
-    accuracy                           0.87       866
-   macro avg       0.59      0.72      0.63       866
-weighted avg       0.91      0.87      0.89       866
------------------------------------------
 
 Mal Sentiment
               precision    recall  f1-score   support
@@ -24,3 +13,14 @@ Mixed_feelings     0.37      0.50      0.43        76
 weighted avg       0.74      0.73      0.73      1766
 -----------------------------------------
 
+Mal Phobia
+              precision    recall  f1-score   support
+
+NonAntiLGBTQ+      0.96      0.89      0.93       748
+  Homophobic       0.60      0.79      0.68       101
+ Transphobic       0.20      0.47      0.28        17
+
+    accuracy                           0.87       866
+   macro avg       0.59      0.72      0.63       866
+weighted avg       0.91      0.87      0.89       866
+-----------------------------------------

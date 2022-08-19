@@ -42,7 +42,7 @@ multitask_model = MultitaskModel.create(
         #"eng_phobia": 'phobia',
         "tam_phobia": transformers.AutoModelForSequenceClassification, 
         #"mal_phobia": 'phobia',
-        #"eng_tam_phobia": 'phobia' 
+        "eng_tam_phobia": transformers.AutoModelForSequenceClassification, 
     },
     model_config_dict={
         #"kan_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
@@ -51,7 +51,7 @@ multitask_model = MultitaskModel.create(
         #"eng_phobia": custom_phobia_model,
         #"mal_phobia": custom_phobia_model,
         "tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3), 
-        #"eng_tam_phobia": custom_phobia_model
+        "eng_tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3), 
     },
 )
 #print(custom_phobia_model)
@@ -65,7 +65,7 @@ dataset_dict = {
     #'eng_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/eng_3_train.tsv", 'test': "../task_b/data/eng_3_dev.tsv"}),
     'tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_tam_train.tsv", 'test': "../task_b/data/tam_3_dev.tsv"}),
     #'mal_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_mal_train.tsv", 'test': "../task_b/data/mal_3_dev.tsv"}),
-    #'eng_tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_eng_tam_train.tsv", 'test': "../task_b/data/eng-tam_3_dev.tsv"}),
+    'eng_tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_eng_tam_train.tsv", 'test': "../task_b/data/eng-tam_3_dev.tsv"}),
 }
 
 def convert_to_mal(example_batch):
@@ -228,7 +228,7 @@ trainer = MultitaskTrainer(
 trainer.train()
 
 preds_dict = {}
-for task_name in ["tam_sentiment", "tam_phobia"]:
+for task_name in ["tam_sentiment", "tam_phobia", "eng_tam_phobia"]:
     print("Starting validation", task_name)
     eval_dataloader = DataLoaderWithTaskname(
         task_name,
@@ -242,7 +242,7 @@ for task_name in ["tam_sentiment", "tam_phobia"]:
 
 from sklearn.metrics import classification_report
 
-f = open('output_tam_run_1', 'w')
+f = open('output_tam_three_layer', 'w')
 
 preds = np.argmax(preds_dict['tam_sentiment'].predictions ,axis=1)
 ground_truth = features_dict['tam_sentiment']['test']['labels']
@@ -289,13 +289,13 @@ f.write(classification_report(preds, ground_truth, target_names=['Non-Anti-LGBTQ
 # f.write("Mal Phobia\n")
 # f.write(classification_report(preds, ground_truth, target_names=['Non-Anti-LGBTQ+', 'Homophobic', 'Transphobic']))
 
-# preds = np.argmax(preds_dict['eng_tam_phobia'].predictions ,axis=1)
-# ground_truth = features_dict['eng_tam_phobia']['test']['labels']
+preds = np.argmax(preds_dict['eng_tam_phobia'].predictions ,axis=1)
+ground_truth = features_dict['eng_tam_phobia']['test']['labels']
 
-# f.write("-----------------------------------------")
-# f.write("Eng Tam Phobia\n")
-# f.write(classification_report(preds, ground_truth))
-# f.write("-----------------------------------------")
-# f.close()
+f.write("-----------------------------------------")
+f.write("Eng Tam Phobia\n")
+f.write(classification_report(preds, ground_truth, target_names=['Non-Anti-LGBTQ+', 'Homophobic', 'Transphobic']))
+f.write("-----------------------------------------")
+f.close()
 
 # print("Eng Tam Phobia:\n", classification_report(preds, ground_truth, target_names=['Positive', 'Negative', 'not-lang', 'unknown_state', 'Mixed_feelings']))

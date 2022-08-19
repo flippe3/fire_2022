@@ -47,7 +47,6 @@ total_steps = len(train_dataloader) * EPOCHS
 scheduler = get_linear_schedule_with_warmup(optimizer, 
                                             num_warmup_steps = 0,
                                             num_training_steps = total_steps)
-
 def train():
     for epoch_i in range(0, EPOCHS):
         print('======== Epoch {:} / {:} ========'.format(epoch_i + 1, EPOCHS))

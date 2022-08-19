@@ -3,6 +3,7 @@ from transformers import AutoModelForSequenceClassification
 import transformers
 from three_layer_model import CustomPhobiaModel
 from transformers.models.roberta.modeling_roberta import RobertaClassificationHead
+from CustomHead import ModifiedClassificationHead
 
 class MultitaskModel(transformers.PreTrainedModel):
     def __init__(self, encoder, taskmodels_dict):
@@ -31,13 +32,11 @@ class MultitaskModel(transformers.PreTrainedModel):
             model_name, 
             config=model_config_dict[task_name],
             )
-            print(task_name)
-            print(str(RobertaClassificationHead))
             if str(task_name)[-6:] == 'phobia':
-                model.classifier = RobertaClassificationHead(model_config_dict[task_name]) 
+                model.classifier = ModifiedClassificationHead(model_config_dict[task_name])
                 model.num_labels = 3
             else:
-                model.classifier = RobertaClassificationHead(model_config_dict[task_name]) 
+                model.classifier = ModifiedClassificationHead(model_config_dict[task_name])
                 model.num_labels = 5
 
             if shared_encoder is None:
@@ -46,7 +45,7 @@ class MultitaskModel(transformers.PreTrainedModel):
                 setattr(model, cls.get_encoder_attr_name(model), shared_encoder)
 
             taskmodels_dict[task_name] = model
-            f = open('ModelDesign_Run1', 'a')
+            f = open("models/"+str(task_name)+'_ModelDesign_ThreeLayer', 'a')
             f.write(str(task_name)+'\n')
             f.write(str(model))
             f.write('\n')
