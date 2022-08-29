@@ -16,7 +16,7 @@ LEARNING_RATE = 3e-5
 
 EPOCHS = 4
 BATCH_SIZE = 12 
-os.environ["CUDA_VISIBLE_DEVICES"]="3"
+os.environ["CUDA_VISIBLE_DEVICES"]="5"
 
 if torch.cuda.is_available():    
     device = torch.device("cuda")
@@ -27,11 +27,11 @@ else:
     print('NO GPU AVAILABLE ERROR')
     device = torch.device("cpu")
 
-tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-xlm-r-multilingual-v1')
+tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-large')
 
 #custom_phobia_model = CustomPhobiaModel()
 #print(custom_phobia_model)
-model_name = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
+model_name = "xlm-roberta-large"
 
 multitask_model = MultitaskModel.create(
     model_name=model_name,
@@ -242,7 +242,7 @@ for task_name in ["tam_sentiment", "kan_sentiment","mal_sentiment", "eng_phobia"
 
 from sklearn.metrics import classification_report
 
-f = open('output_tam_normal_layer_lr1e-5', 'w')
+f = open('output_all_xlm_roberta_large', 'w')
 
 preds = np.argmax(preds_dict['tam_sentiment'].predictions ,axis=1)
 ground_truth = features_dict['tam_sentiment']['test']['labels']

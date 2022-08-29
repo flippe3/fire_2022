@@ -32,12 +32,12 @@ class MultitaskModel(transformers.PreTrainedModel):
             model_name, 
             config=model_config_dict[task_name],
             )
-            if str(task_name)[-6:] == 'phobia':
-                model.classifier = ModifiedClassificationHead(model_config_dict[task_name])
-                model.num_labels = 3
-            else:
-                model.classifier = ModifiedClassificationHead(model_config_dict[task_name])
-                model.num_labels = 5
+            # if str(task_name)[-6:] == 'phobia':
+            #     model.classifier = ModifiedClassificationHead(model_config_dict[task_name])
+            #     model.num_labels = 3
+            # else:
+            #     model.classifier = ModifiedClassificationHead(model_config_dict[task_name])
+            #     model.num_labels = 5
 
             if shared_encoder is None:
                 shared_encoder = getattr(model, cls.get_encoder_attr_name(model))
@@ -45,10 +45,10 @@ class MultitaskModel(transformers.PreTrainedModel):
                 setattr(model, cls.get_encoder_attr_name(model), shared_encoder)
 
             taskmodels_dict[task_name] = model
-            f = open("models/"+str(task_name)+'_ModelDesign_ThreeLayer', 'a')
-            f.write(str(task_name)+'\n')
-            f.write(str(model))
-            f.write('\n')
+            # f = open("models/"+str(task_name)+'_ModelDesign_NormalLayer', 'a')
+            # f.write(str(task_name)+'\n')
+            # f.write(str(model))
+            # f.write('\n')
 
 
         return cls(encoder=shared_encoder, taskmodels_dict=taskmodels_dict)

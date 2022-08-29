@@ -242,7 +242,7 @@ for task_name in ["tam_sentiment", "tam_phobia", "eng_tam_phobia"]:
 
 from sklearn.metrics import classification_report
 
-f = open('output_tam_three_layer', 'w')
+f = open('output_tam_normal_layer', 'w')
 
 preds = np.argmax(preds_dict['tam_sentiment'].predictions ,axis=1)
 ground_truth = features_dict['tam_sentiment']['test']['labels']
