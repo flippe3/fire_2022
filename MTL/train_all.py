@@ -214,18 +214,20 @@ train_dataset = {
 trainer = MultitaskTrainer(
     model=multitask_model,
     args=transformers.TrainingArguments(
+        save_strategy="no"
         output_dir="output_trainer",
         overwrite_output_dir=True,
         learning_rate=1e-5,
         do_train=True,
         num_train_epochs=4,
         per_device_train_batch_size=BATCH_SIZE,
-        save_steps=3000,
     ),
     data_collator=NLPDataCollator(),
     train_dataset=train_dataset,
 )
 trainer.train()
+
+trainer.save_model("ALL_XLM_ROBERTA_LARGE")
 
 preds_dict = {}
 for task_name in ["tam_sentiment", "kan_sentiment","mal_sentiment", "eng_phobia", "tam_phobia", "mal_phobia", "eng_tam_phobia"]:
