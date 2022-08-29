@@ -3,7 +3,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 import transformers
-import nlp
 import logging
 from torch.utils.data.dataloader import DataLoader
 from transformers.training_args import * 
