@@ -11,11 +11,12 @@ from model import MultitaskModel
 from data_trainer import *
 from datasets import load_dataset
 from three_layer_model import CustomPhobiaModel
+import nlp
 
-LEARNING_RATE = 3e-5
+LEARNING_RATE = 1e-5
 
 EPOCHS = 4
-BATCH_SIZE = 12 
+BATCH_SIZE = 24
 os.environ["CUDA_VISIBLE_DEVICES"]="5"
 
 if torch.cuda.is_available():    
@@ -27,11 +28,11 @@ else:
     print('NO GPU AVAILABLE ERROR')
     device = torch.device("cpu")
 
-tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-large')
+tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-xlm-r-multilingual-v1')
 
 #custom_phobia_model = CustomPhobiaModel()
 #print(custom_phobia_model)
-model_name = "xlm-roberta-large"
+model_name = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 
 multitask_model = MultitaskModel.create(
     model_name=model_name,
@@ -58,14 +59,14 @@ multitask_model = MultitaskModel.create(
 #print(transformers.AutoConfig.from_pretrained(model_name, num_labels=3))
 
 dataset_dict = {
-    'kan_sentiment': load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_kan_train.tsv", 'test': "../task_a/data/kan_sentiment_dev.tsv"}),
-    'mal_sentiment': load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_mal_train.tsv", 'test': "../task_a/data/Mal_sentiment_dev.tsv"}),
-    'tam_sentiment': load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_tam_train.tsv", 'test': "../task_a/data/tam_sentiment_dev.tsv"}),
+    'kan_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_kan_train.tsv", 'test': "../task_a/data/kan_sentiment_dev.tsv"}),
+    'mal_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_mal_train.tsv", 'test': "../task_a/data/Mal_sentiment_dev.tsv"}),
+    'tam_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_tam_train.tsv", 'test': "../task_a/data/tam_sentiment_dev.tsv"}),
 
-    'eng_phobia': load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/eng_3_train.tsv", 'test': "../task_b/data/eng_3_dev.tsv"}),
-    'tam_phobia': load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_tam_train.tsv", 'test': "../task_b/data/tam_3_dev.tsv"}),
-    'mal_phobia': load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_mal_train.tsv", 'test': "../task_b/data/mal_3_dev.tsv"}),
-    'eng_tam_phobia': load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_eng_tam_train.tsv", 'test': "../task_b/data/eng-tam_3_dev.tsv"}),
+    'eng_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/eng_3_train.tsv", 'test': "../task_b/data/eng_3_dev.tsv"}),
+    'tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_tam_train.tsv", 'test': "../task_b/data/tam_3_dev.tsv"}),
+    'mal_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_mal_train.tsv", 'test': "../task_b/data/mal_3_dev.tsv"}),
+    'eng_tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_eng_tam_train.tsv", 'test': "../task_b/data/eng-tam_3_dev.tsv"}),
 }
 
 def convert_to_mal(example_batch):
@@ -150,6 +151,7 @@ def convert_to_tam(example_batch):
 
 def convert_to_phobia(example_batch):
     features = {}
+    print(len(example_batch['text']))
     features = tokenizer.batch_encode_plus(
                                     example_batch['text'],            
                                     add_special_tokens = True,
@@ -210,14 +212,15 @@ for task_name, dataset in dataset_dict.items():
 train_dataset = {
 		task_name: dataset["train"] for task_name, dataset in features_dict.items()
 }
-
+print("*******************")
+print("STARTING TRAINING")
 trainer = MultitaskTrainer(
     model=multitask_model,
     args=transformers.TrainingArguments(
         save_strategy="no",
         output_dir="output_trainer",
         overwrite_output_dir=True,
-        learning_rate=1e-5,
+        learning_rate=LEARNING_RATE,
         do_train=True,
         num_train_epochs=4,
         per_device_train_batch_size=BATCH_SIZE,
@@ -226,8 +229,9 @@ trainer = MultitaskTrainer(
     train_dataset=train_dataset,
 )
 trainer.train()
-
-trainer.save_model("ALL_XLM_ROBERTA_LARGE")
+print("FINISHED TRAINING")
+print("*****************")
+trainer.save_model(f"ALL_SENTENCEPIECE_XLM_LR={LEARNING_RATE}")
 
 preds_dict = {}
 for task_name in ["tam_sentiment", "kan_sentiment","mal_sentiment", "eng_phobia", "tam_phobia", "mal_phobia", "eng_tam_phobia"]:

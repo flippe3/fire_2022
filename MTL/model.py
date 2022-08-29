@@ -32,12 +32,12 @@ class MultitaskModel(transformers.PreTrainedModel):
             model_name, 
             config=model_config_dict[task_name],
             )
-            # if str(task_name)[-6:] == 'phobia':
+            #if str(task_name)[-6:] == 'phobia':
             #     model.classifier = ModifiedClassificationHead(model_config_dict[task_name])
-            #     model.num_labels = 3
-            # else:
+                # model.num_labels = 3
+            #else:
             #     model.classifier = ModifiedClassificationHead(model_config_dict[task_name])
-            #     model.num_labels = 5
+                # model.num_labels = 5
 
             if shared_encoder is None:
                 shared_encoder = getattr(model, cls.get_encoder_attr_name(model))

@@ -11,12 +11,13 @@ from model import MultitaskModel
 from data_trainer import *
 from datasets import load_dataset
 from three_layer_model import CustomPhobiaModel
+import mal
 
 LEARNING_RATE = 3e-5
 
 EPOCHS = 4
 BATCH_SIZE = 12  
-os.environ["CUDA_VISIBLE_DEVICES"]="2"
+os.environ["CUDA_VISIBLE_DEVICES"]="5"
 
 if torch.cuda.is_available():    
     device = torch.device("cuda")
@@ -58,18 +59,19 @@ multitask_model = MultitaskModel.create(
 #print(transformers.AutoConfig.from_pretrained(model_name, num_labels=3))
 
 dataset_dict = {
-    #'kan_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_kan_train.tsv", 'test': "../task_a/data/kan_sentiment_dev.tsv"}),
-    'mal_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_mal_train.tsv", 'test': "../task_a/data/Mal_sentiment_dev.tsv"}),
-    #'tam_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_tam_train.tsv", 'test': "../task_a/data/tam_sentiment_dev.tsv"}),
+    #'kan_sentiment': load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_kan_train.tsv", 'test': "../task_a/data/kan_sentiment_dev.tsv"}),
+    'mal_sentiment': load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_mal_train.tsv", 'test': "../task_a/data/Mal_sentiment_dev.tsv"}),
+    #'tam_sentiment': load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_tam_train.tsv", 'test': "../task_a/data/tam_sentiment_dev.tsv"}),
 
-    #'eng_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/eng_3_train.tsv", 'test': "../task_b/data/eng_3_dev.tsv"}),
-    #'tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_tam_train.tsv", 'test': "../task_b/data/tam_3_dev.tsv"}),
-    'mal_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_mal_train.tsv", 'test': "../task_b/data/mal_3_dev.tsv"}),
-    #'eng_tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_eng_tam_train.tsv", 'test': "../task_b/data/eng-tam_3_dev.tsv"}),
+    #'eng_phobia': load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/eng_3_train.tsv", 'test': "../task_b/data/eng_3_dev.tsv"}),
+    #'tam_phobia': load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_tam_train.tsv", 'test': "../task_b/data/tam_3_dev.tsv"}),
+    'mal_phobia': load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_mal_train.tsv", 'test': "../task_b/data/mal_3_dev.tsv"}),
+    #'eng_tam_phobia': load_dataset('csv', delimiter='\t', data_files={'train': "../task_b/data/new_eng_tam_train.tsv", 'test': "../task_b/data/eng-tam_3_dev.tsv"}),
 }
 
 def convert_to_mal(example_batch):
     features = {}
+    print(example_batch['text'])
     features = tokenizer.batch_encode_plus(
                                     example_batch['text'],            
                                     add_special_tokens = True,
@@ -150,6 +152,7 @@ def convert_to_tam(example_batch):
 
 def convert_to_phobia(example_batch):
     features = {}
+    print(len(example_batch['text']))
     features = tokenizer.batch_encode_plus(
                                     example_batch['text'],            
                                     add_special_tokens = True,

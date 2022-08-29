@@ -11,7 +11,7 @@ from model import MultitaskModel
 from data_trainer import *
 from datasets import load_dataset
 from three_layer_model import CustomPhobiaModel
-
+import nlp
 LEARNING_RATE = 3e-5
 
 EPOCHS = 4
