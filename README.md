@@ -1,5 +1,5 @@
 # Fire 2022
-Official repo for team EISLAB in [Sentiment Analysis and Homophobia detection  of YouTube comments in Code-Mixed Dravidian Languages
+Official repo for team Fnet in [Sentiment Analysis and Homophobia detection  of YouTube comments in Code-Mixed Dravidian Languages
 ](https://sites.google.com/view/dravidiancodemix-2022/home?authuser=0)
 
 ## [Task A Work Notes](https://github.com/flippe3/fire_2022/blob/master/task_a/study.md)
