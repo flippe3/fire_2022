@@ -29,7 +29,15 @@ class Dataset:
     # English-Tamil
     eng_tam_train = "../data/new_eng_tam_train.tsv"
     eng_tam_val = "../data/eng-tam_3_dev.tsv"
-     
+
+    s_tam_test = "/home/filnil/fire_2022/task_a/data/tam_test.tsv"
+    s_mal_test = "/home/filnil/fire_2022/task_a/data/mal_test.tsv"
+    s_kan_test = "/home/filnil/fire_2022/task_a/data/kan_test.tsv"
+
+    t_eng_test = "/home/filnil/fire_2022/task_b/data/eng_test.tsv"
+    t_mal_test = "/home/filnil/fire_2022/task_b/data/mal_test.tsv"
+    t_tam_test = "/home/filnil/fire_2022/task_b/data/tam_test.tsv"
+    t_tam_eng_test = "/home/filnil/fire_2022/task_b/data/tam-eng_test.tsv"
 
     def get_dataset(self, tokenizer, train_file, test=False, balance=False):
         if test == False:
@@ -51,6 +59,20 @@ class Dataset:
             dataset = TensorDataset(inputs, masks)
             
         return dataset
+    def get_test_dataset(self, tokenizer):
+        eng_test = self.get_dataset(tokenizer, self.t_eng_test, balance=False, test=True)
+        tam_test = self.get_dataset(tokenizer, self.t_tam_test, balance=False, test=True)
+        mal_test = self.get_dataset(tokenizer, self.t_mal_test, balance=False, test=True)
+        eng_tam_test = self.get_dataset(tokenizer, self.t_tam_eng_test, balance=False, test=True)
+
+        s_kan_test = self.get_dataset(tokenizer, self.s_kan_test, balance=False, test=True)
+        s_tam_test = self.get_dataset(tokenizer, self.s_tam_test, balance=False, test=True)
+        s_mal_test = self.get_dataset(tokenizer, self.s_mal_test, balance=False, test=True)
+
+
+        return eng_test, tam_test, mal_test, eng_tam_test, s_kan_test, s_tam_test, s_mal_test
+
+    
 
     def get_phobia_dataset(self, tokenizer, balance=False):
         eng_train = self.get_dataset(tokenizer, self.eng_train, balance=balance)
@@ -118,7 +140,7 @@ class Dataset:
         
         print(f"path:{path} len: {len(df)}")
 
-        df = df.dropna(subset=['text','category'])
+        df = df.dropna(subset=['text'])
         df = df.drop_duplicates(subset='text')
 
         print(f"path:{path} NEW len: {len(df)}")

@@ -18,16 +18,17 @@ class NLPDataCollator(DefaultDataCollator):
         if isinstance(first, dict):
           # NLP data sets current works presents features as lists of dictionary
           # (one per example), so we  will adapt the collate_batch logic for that
-          if "labels" in first and first["labels"] is not None:
-              if first["labels"].dtype == torch.int64:
-                  labels = torch.tensor([f["labels"] for f in features], dtype=torch.long)
-              else:
-                  labels = torch.tensor([f["labels"] for f in features], dtype=torch.float)
-              batch = {"labels": labels}
-          for k, v in first.items():
-              if k != "labels" and v is not None and not isinstance(v, str):
-                  batch[k] = torch.stack([f[k] for f in features])
-          return batch
+            if "labels" in first and first["labels"] is not None:
+                if first["labels"].dtype == torch.int64:
+                    labels = torch.tensor([f["labels"] for f in features], dtype=torch.long)
+                else:
+                    labels = torch.tensor([f["labels"] for f in features], dtype=torch.float)
+                batch = {"labels": labels}
+            for k, v in first.items():
+                if k != "labels" and v is not None and not isinstance(v, str):
+                    batch[k] = torch.stack([f[k] for f in features])
+        
+            return batch
         else:
           # otherwise, revert to using the default collate_batch
             return DefaultDataCollator().collate_batch(features)
@@ -46,6 +47,9 @@ class DataLoaderWithTaskname:
         self.batch_size = data_loader.batch_size
         self.dataset = data_loader.dataset
         print(self.task_name, len(self.dataset), self.batch_size, self.data_loader)
+
+    def __idx__(self, key):
+        return se
 
     def __len__(self):
         return len(self.data_loader)
@@ -114,3 +118,29 @@ class MultitaskTrainer(transformers.Trainer):
             task_name: self.get_single_train_dataloader(task_name, task_dataset)
             for task_name, task_dataset in self.train_dataset.items()
         })
+
+    # def get_single_test_dataloader(self, task_name, test_dataset):
+    #     if self.test_dataset is None:
+    #         raise ValueError("Trainer: training requires a test_dataset.")
+
+    #     test_sampler = (
+    #         DistributedSampler(test_dataset)
+    #     )
+
+    #     data_loader = DataLoaderWithTaskname(
+    #         task_name=task_name,
+    #         data_loader=DataLoader(
+    #           train_dataset,
+    #            batch_size=self.args.train_batch_size,
+    #            #batch_size=16,
+    #           sampler=test_sampler,
+    #           collate_fn=self.data_collator.collate_batch,
+    #         ),
+    #     )
+    #     return data_loader
+
+    # def get_test_dataloader(self):
+    #     return MultitaskDataloader({
+    #         task_name: self.get_single_test_dataloader(task_name, task_dataset)
+    #         for task_name, task_dataset in self.test_dataset.items()
+    #     })
