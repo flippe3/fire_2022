@@ -1,0 +1,22 @@
+Eng Phobia
+              precision    recall  f1-score   support
+
+           0       0.99      0.95      0.97       958
+           1       0.30      0.56      0.39        32
+           2       0.00      0.00      0.00         0
+
+    accuracy                           0.94       990
+   macro avg       0.43      0.50      0.45       990
+weighted avg       0.96      0.94      0.95       990
+Val              precision    recall  f1-score   support
+
+           0       0.99      0.95      0.97       765
+           1       0.34      0.74      0.47        27
+           2       0.00      0.00      0.00         0
+
+    accuracy                           0.94       792
+   macro avg       0.45      0.56      0.48       792
+weighted avg       0.97      0.94      0.95       792
+[[725   7   0]
+ [ 38  20   0]
+ [  2   0   0]]-----------------------------------------

@@ -86,14 +86,14 @@ dataset_dict = {
 # }
 
 dataset_dict_test = {
-    'kan_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_a/data/kan_test.tsv"}),
-    'mal_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_a/data/mal_test.tsv"}),
-    'tam_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_a/data/tam_test.tsv"}),
+    'kan_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_a/data/test/kan_test.tsv"}),
+    'mal_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_a/data/test/mal_test.tsv"}),
+    'tam_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_a/data/test/tam_test.tsv"}),
 
-    'eng_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_b/data/eng_test.tsv"}),
-    'tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_b/data/tam_test.tsv"}),
-    'mal_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_b/data/mal_test.tsv"}),
-    'eng_tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_b/data/tam-eng_test.tsv"}),
+    'eng_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_b/data/test/eng_test.tsv"}),
+    'tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_b/data/test/tam_test.tsv"}),
+    'mal_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_b/data/test/mal_test.tsv"}),
+    'eng_tam_phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'test': "../task_b/data/test/tam-eng_test.tsv"}),
 }
 
 

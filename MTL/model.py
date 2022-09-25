@@ -77,4 +77,8 @@ class MultitaskModel(transformers.PreTrainedModel):
 
     def forward(self, task_name, **kwargs):
         #print(kwargs)
+        if "sentiment" in task_name:
+            task_name = "sentiment"
+        elif "phobia" in task_name:
+            task_name = "phobia"
         return self.taskmodels_dict[task_name](**kwargs)
