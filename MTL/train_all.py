@@ -270,7 +270,7 @@ print("*****************")
 
 
 preds_dict = {}
-for task_name in ["tam_sentiment", "kan_sentiment","mal_sentiment", "eng_phobia", "tam_phobia", "mal_phobia", "eng_tam_phobia"]:
+for task_name in ["eng_phobia", "tam_phobia", "mal_phobia", "eng_tam_phobia"]:
     print("Starting validation", task_name)
     eval_dataloader = DataLoaderWithTaskname(
         task_name,

@@ -9,7 +9,7 @@ from transformers.training_args import *
 from transformers.trainer import * 
 from transformers.data.data_collator import DefaultDataCollator, InputDataClass
 from torch.utils.data.distributed import DistributedSampler
-from torch.utils.data.sampler import RandomSampler
+from torch.utils.data.sampler import RandomSampler, WeightedRandomSampler
 from typing import List, Union, Dict
 
 class NLPDataCollator(DefaultDataCollator):
@@ -77,6 +77,7 @@ class MultitaskDataloader:
         return sum(self.num_batches_dict.values())
 
     def __iter__(self):
+        "Examples-proportional sampling"
         task_choice_list = []
         for i, task_name in enumerate(self.task_name_list):
             task_choice_list += [i] * self.num_batches_dict[task_name]
@@ -95,7 +96,7 @@ class MultitaskTrainer(transformers.Trainer):
     def get_single_train_dataloader(self, task_name, train_dataset):
         if self.train_dataset is None:
             raise ValueError("Trainer: training requires a train_dataset.")
-
+        
         train_sampler = (
             RandomSampler(train_dataset)
             if self.args.local_rank == -1

@@ -77,8 +77,16 @@ class MultitaskModel(transformers.PreTrainedModel):
 
     def forward(self, task_name, **kwargs):
         #print(kwargs)
-        if "sentiment" in task_name:
-            task_name = "sentiment"
-        elif "phobia" in task_name:
-            task_name = "phobia"
+        # if "tam_phobia" == task_name:
+        #     task_name = "tam_sentiment"
+        # elif "mal_phobia" == task_name:
+        #     task_name = "mal_sentiment"
+        # elif "eng_tam_phobia" == task_name:
+        #     task_name = "tam_sentiment"
+        # elif "eng_phobia" == task_name:
+        #     task_name = "tam_sentiment"
+        #print(task_name)
+        f = open("task_order.txt", 'a')
+        f.write(task_name+"\n")
+        f.close()
         return self.taskmodels_dict[task_name](**kwargs)

@@ -49,26 +49,26 @@ model_name = "sentence-transformers/paraphrase-xlm-r-multilingual-v1"
 multitask_model = MultitaskModel.create(
     model_name=model_name,
     model_type_dict={
-        # "sentiment": transformers.AutoModelForSequenceClassification,
-        # "phobia": transformers.AutoModelForSequenceClassification,
-        "mal_sentiment": transformers.AutoModelForSequenceClassification,
-        "kan_sentiment": transformers.AutoModelForSequenceClassification,
-        "tam_sentiment": transformers.AutoModelForSequenceClassification,
-        "eng_phobia": transformers.AutoModelForSequenceClassification,
-        "tam_phobia": transformers.AutoModelForSequenceClassification, 
-        "mal_phobia": transformers.AutoModelForSequenceClassification, 
-        "eng_tam_phobia": transformers.AutoModelForSequenceClassification, 
+        "sentiment": transformers.AutoModelForSequenceClassification,
+        "phobia": transformers.AutoModelForSequenceClassification,
+        # "mal_sentiment": transformers.AutoModelForSequenceClassification,
+        # "kan_sentiment": transformers.AutoModelForSequenceClassification,
+        # "tam_sentiment": transformers.AutoModelForSequenceClassification,
+        # "eng_phobia": transformers.AutoModelForSequenceClassification,
+        # "tam_phobia": transformers.AutoModelForSequenceClassification, 
+        # "mal_phobia": transformers.AutoModelForSequenceClassification, 
+        # "eng_tam_phobia": transformers.AutoModelForSequenceClassification, 
     },
     model_config_dict={
-        # "sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
-        # "phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3),
-        "kan_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
-        "mal_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
-        "tam_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
-        "eng_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3), 
-        "mal_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3), 
-        "tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3), 
-        "eng_tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3), 
+        "sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
+        "phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3),
+        # "kan_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
+        # "mal_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
+        # "tam_sentiment": transformers.AutoConfig.from_pretrained(model_name, num_labels=5),
+        # "eng_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3), 
+        # "mal_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3), 
+        # "tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3), 
+        # "eng_tam_phobia": transformers.AutoConfig.from_pretrained(model_name, num_labels=3), 
     },
 )
 
@@ -80,8 +80,8 @@ dataset_dict = {
     # 'phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': ["../task_b/data/FAKE.tsv"]}),
     # 'sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': ["../task_a/data/new_kan_train.tsv", "../task_a/data/new_tam_train.tsv", "../task_a/data/new_mal_train.tsv"]}),
     # 'phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': ["../task_b/data/eng_3_train.tsv", "../task_b/data/new_tam_train.tsv", "../task_b/data/new_mal_train.tsv", "../task_b/data/new_eng_tam_train.tsv"]}),
-    # 'sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': ["../task_a/data/new_mal_train.tsv"]}),
-    # 'phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': ["../task_b/data/new_mal_train.tsv"]}),
+    'sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': ["../task_a/data/new_tam_train.tsv"]}),
+    'phobia': nlp.load_dataset('csv', delimiter='\t', data_files={'train': ["../task_b/data/new_tam_train.tsv", "../task_b/data/new_eng_tam_train.tsv"]}),
     'kan_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_kan_train.tsv", 'test': "../task_a/data/test/new_kan_test.tsv", 'validation': "../task_a/data/kan_sentiment_dev.tsv"}),
     'mal_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_mal_train.tsv", 'test': "../task_a/data/test/new_mal_test.tsv", 'validation': "../task_a/data/Mal_sentiment_dev.tsv"}),
     'tam_sentiment': nlp.load_dataset('csv', delimiter='\t', data_files={'train': "../task_a/data/new_tam_train.tsv", 'test': "../task_a/data/test/new_tam_test.tsv", 'validation': "../task_a/data/tam_sentiment_dev.tsv"}),
@@ -143,8 +143,8 @@ def convert_to_phobia(example_batch):
     return features
     
 convert_func_dict = {
-    # "sentiment": convert_to_sentiment,
-    # "phobia": convert_to_phobia,
+    "sentiment": convert_to_sentiment,
+    "phobia": convert_to_phobia,
     "kan_sentiment": convert_to_sentiment,
     "mal_sentiment": convert_to_sentiment,
     "tam_sentiment": convert_to_sentiment,
@@ -155,8 +155,8 @@ convert_func_dict = {
 }
 
 columns_dict = {
-    # "sentiment": ['input_ids', 'attention_mask', 'labels'],
-    # "phobia": ['input_ids', 'attention_mask', 'labels'],
+    "sentiment": ['input_ids', 'attention_mask', 'labels'],
+    "phobia": ['input_ids', 'attention_mask', 'labels'],
     "mal_sentiment": ['input_ids', 'attention_mask', 'labels'],
     "kan_sentiment": ['input_ids', 'attention_mask', 'labels'],
     "tam_sentiment": ['input_ids', 'attention_mask', 'labels'],
@@ -183,30 +183,16 @@ for task_name, dataset in dataset_dict.items():
         )
         print(task_name, phase, len(phase_dataset), len(features_dict[task_name][phase]))
 
-train_dataset = {
-    task_name: dataset["train"] for task_name, dataset in features_dict.items()
-}
-
-sizes = []
-total = 0
-for task_name, dataset in features_dict.items():
-    sizes.append(len(dataset['train']))
-    total += len(dataset['train'])
-    print(task_name, len(dataset['train']))
-
-print("Proportions:", sizes, total)
-scaled_proporsions = []
-for i in sizes:
-    scaled_proporsions.append((1 - (i / total))/3)
-
-print("scaled:", scaled_proporsions)
-
-
-#  train_dataset = {
-#      'sentiment': features_dict['sentiment']['train'],
-#      'phobia': features_dict['phobia']['train']
+# train_dataset = {
+# 		task_name: dataset["train"] for task_name, dataset in features_dict.items()
 # }
 
+train_dataset = {
+    'sentiment': features_dict['sentiment']['train'],
+    'phobia': features_dict['phobia']['train']
+}
+
+print(train_dataset)
 
 print("STARTING TRAINING")
 trainer = MultitaskTrainer(
@@ -233,19 +219,16 @@ preds_dict = {}
 val_dict = {}
 
 # Experiment 1
-# tasks = ["tam_phobia", "mal_phobia", "eng_tam_phobia", "eng_phobia"]
+# tasks = ["tam_phobia", "mal_phobia", "eng_phobia", "eng_tam_phobia"]
 
 # Experiment 2
-tasks = ["mal_sentiment", "tam_sentiment", "kan_sentiment", "tam_phobia", "mal_phobia", "eng_phobia", "eng_tam_phobia"]
+# tasks = ["mal_sentiment", "tam_sentiment", "kan_sentiment", "tam_phobia", "mal_phobia", "eng_phobia", "eng_tam_phobia"]
 
 # Experiment 3.1
 # tasks = ["tam_sentiment", "eng_phobia", "eng_tam_phobia", "tam_phobia"]
 
 # Experiment 3.2
-# tasks = ["tam_sentiment", "tam_phobia", "eng_tam_phobia"]
-
-# Experiment 5.2.4
-# tasks = ["mal_sentiment", "mal_phobia"]
+tasks = ["tam_sentiment", "tam_phobia", "eng_tam_phobia"]
 
 
 for task_name in tasks:
@@ -287,26 +270,12 @@ def write_output(filename, preds_dict, val_dict, features_dict):
         f.write(task + "Val")
         ground_truth = features_dict[task]['validation']['labels']
         f.write(classification_report(vals, ground_truth))    
-        f.write(str(confusion_matrix(ground_truth, preds)))
-        #f.write(str(confusion_matrix(ground_truth, vals)))
+        # f.write(str(confusion_matrix(ground_truth, preds)))
+        f.write(str(confusion_matrix(ground_truth, vals)))
         f.write("-----------------------------------------\n")
 
-        # with open(task + '_test_on_sentiment', 'wb') as fi:
-        #     np.save(fi, np.array(preds_dict[task].predictions))
-        
-        # with open(task + '_test_labels', 'wb') as fi:
-        #     np.save(fi, np.array(ground_truth))
-         
-        # with open(task + '_val_on_sentiment', 'wb') as fi:
-        #     np.save(fi, np.array(val_dict[task].predictions))
-
-        # ground_truth = features_dict[task]['validation']['labels']
-        # with open(task + '_test_labels', 'wb') as fi:
-        #     np.save(fi, np.array(ground_truth))
-
-
-    # f.close()
+    f.close()
 
     print("Successfully wrote file")
 
-write_output("experimentation", preds_dict, val_dict, features_dict)
+write_output("experiment 5.4.1", preds_dict, val_dict, features_dict)
