@@ -187,20 +187,7 @@ train_dataset = {
     task_name: dataset["train"] for task_name, dataset in features_dict.items()
 }
 
-sizes = []
-total = 0
-for task_name, dataset in features_dict.items():
-    sizes.append(len(dataset['train']))
-    total += len(dataset['train'])
-    print(task_name, len(dataset['train']))
-
-print("Proportions:", sizes, total)
-scaled_proporsions = []
-for i in sizes:
-    scaled_proporsions.append((1 - (i / total))/3)
-
-print("scaled:", scaled_proporsions)
-
+#train_dataset = {task_name: features_dict['tam_sentiment']['train']}
 
 #  train_dataset = {
 #      'sentiment': features_dict['sentiment']['train'],
@@ -236,10 +223,10 @@ val_dict = {}
 # tasks = ["tam_phobia", "mal_phobia", "eng_tam_phobia", "eng_phobia"]
 
 # Experiment 2
-tasks = ["mal_sentiment", "tam_sentiment", "kan_sentiment", "tam_phobia", "mal_phobia", "eng_phobia", "eng_tam_phobia"]
+tasks = ["tam_phobia"]
 
 # Experiment 3.1
-# tasks = ["tam_sentiment", "eng_phobia", "eng_tam_phobia", "tam_phobia"]
+#tasks = ["tam_sentiment", "eng_phobia", "eng_tam_phobia", "tam_phobia", 'mal_phobia', "mal_sentiment", "kan_sentiment"]
 
 # Experiment 3.2
 # tasks = ["tam_sentiment", "tam_phobia", "eng_tam_phobia"]
@@ -252,7 +239,7 @@ for task_name in tasks:
     print("Starting validation", task_name)
     eval_dataloader = DataLoaderWithTaskname(
         task_name,
-        trainer.get_eval_dataloader(eval_dataset=features_dict[task_name]["test"])
+        trainer.get_eval_dataloader(eval_dataset=features_dict[task_name]["train"])
     )
     print(eval_dataloader.data_loader.collate_fn)
     preds_dict[task_name] = trainer.evaluation_loop(
@@ -280,33 +267,32 @@ def write_output(filename, preds_dict, val_dict, features_dict):
     for task in tasks:
         preds = np.argmax(preds_dict[task].predictions ,axis=1)
         vals = np.argmax(val_dict[task].predictions ,axis=1)
-        ground_truth = features_dict[task]['test']['labels']
+        ground_truth = features_dict[task]['train']['labels']
 
-        f.write(task + " Test\n")
-        f.write(classification_report(preds, ground_truth))
-        f.write(task + "Val")
-        ground_truth = features_dict[task]['validation']['labels']
-        f.write(classification_report(vals, ground_truth))    
-        f.write(str(confusion_matrix(ground_truth, preds)))
-        #f.write(str(confusion_matrix(ground_truth, vals)))
-        f.write("-----------------------------------------\n")
-
-        # with open(task + '_test_on_sentiment', 'wb') as fi:
-        #     np.save(fi, np.array(preds_dict[task].predictions))
+        # with open(task + '_test_on_sentiment_new', 'wb') as fi:
+        #      np.save(fi, np.array(preds_dict[task].predictions))
         
-        # with open(task + '_test_labels', 'wb') as fi:
-        #     np.save(fi, np.array(ground_truth))
-         
-        # with open(task + '_val_on_sentiment', 'wb') as fi:
+        #with open(task + '_test_labels_new', 'wb') as fi:
+        #    np.save(fi, np.array(ground_truth))
+        
+        # with open(task + '_val_on_sentiment_new', 'wb') as fi:
         #     np.save(fi, np.array(val_dict[task].predictions))
 
         # ground_truth = features_dict[task]['validation']['labels']
-        # with open(task + '_test_labels', 'wb') as fi:
+        # with open(task + '_test_labels_new', 'wb') as fi:
         #     np.save(fi, np.array(ground_truth))
 
+        f.write(task + " Test\n")
+        f.write(classification_report(preds, ground_truth))
+        f.write(str(confusion_matrix(ground_truth, preds)))
+        f.write(task + "Val")
+        f.write(classification_report(vals, ground_truth))    
+        ground_truth = features_dict[task]['validation']['labels']
+        f.write(str(confusion_matrix(ground_truth, vals)))
+        f.write("-----------------------------------------\n")
 
-    # f.close()
+    f.close()
 
     print("Successfully wrote file")
 
-write_output("experimentation", preds_dict, val_dict, features_dict)
+write_output("experimentation_n", preds_dict, val_dict, features_dict)

@@ -86,7 +86,5 @@ class MultitaskModel(transformers.PreTrainedModel):
         # elif "eng_phobia" == task_name:
         #     task_name = "tam_sentiment"
         #print(task_name)
-        f = open("task_order.txt", 'a')
-        f.write(task_name+"\n")
-        f.close()
+        
         return self.taskmodels_dict[task_name](**kwargs)
